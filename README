@@ -55,6 +55,10 @@ library lib/libEvent.so in your root session or
 working macro with:
 gSystem->Load("lib/libEvent.so");
 
+add also the include path to the root logon macro
+gSystem->AddIncludePath("-I/path/to/include/");
+gInterpreter->AddIncludePath("/path/to/include/");
+
 The accessible variables/member functions for an
 event or a particle can be investigated in include/Event.h
 
@@ -74,8 +78,10 @@ in top dir:
 =======================================================================
 	main.C				main program coordinates event generation and I/O.
 	pythia-6.4.25.f		pythia file with modifications interfaced to LHAPDF.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	pyMainRHIC.f		init routine which reads parameters from input
-						and call pythia initialization routines.
+	pyMainLEP.f			and call pythia initialization routines for pp/ee
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 in src/:
 =======================================================================

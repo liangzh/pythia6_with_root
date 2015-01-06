@@ -1,4 +1,4 @@
-45, 45          ! target beam energy, projectile beam energy
+2 , 2           ! target beam energy, projectile beam energy
 100000,10000          ! Number of events 
 201				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
 197,79				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
