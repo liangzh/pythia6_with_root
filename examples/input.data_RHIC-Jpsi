@@ -1,0 +1,65 @@
+500, 500          ! target beam energy, projectile beam energy
+100,10          ! Number of events 
+201				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
+197,79				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
+MSEL=0          ! choose any subprocess
+MSUB(86)=1      ! gg->Jpsi+g
+MSUB(87)=1      ! gg->chi_c0+g
+MSUB(88)=1      ! gg->chi_c1+g
+MSUB(89)=1      ! gg->chi_c2+g
+!MSUB(91)=0      ! Elastic
+!MSUB(92)=1      ! Singly diffractive (XB)
+!MSUB(93)=1      ! Singly diffractive (AX)
+!MSUB(94)=1      ! Double diffractive
+!MSUB(95)=1      ! Low-pT scattering
+!MSUB(96)=1      ! Semihard QCD 2 -> 2 
+!MSUB(1)=1 
+!MSUB(2)=1 
+!MSUB(10)=1 
+!MSUB(11)=1 
+!MSUB(12)=1 
+!MSUB(13)=1 
+!MSUB(28)=1 
+!MSUB(53)=1 
+!MSUB(68)=1 
+!MSUB(82)=1 
+!MSUB(14)=1 
+!MSUB(18)=1 
+!MSUB(29)=1 
+!MSUB(114)=1 
+!MSUB(115)=1 
+! mstp(5)=100   ! this selects tune A
+! MSTP(43) =            3 !
+MSTP(51) =        10150 ! CTEQ 6m PDF set for proton 
+MSTP(52) =            2 ! PDF set internal (=1) or pdflib (=2)        
+PARP(62) =       1.0000 ! ISR IR cutoff                               
+PARP(64) =       1.0000 ! ISR renormalization scale prefactor          
+PARP(67) =       4.0000 ! ISR Q2max factor                             
+MSTP(68) =            3 ! ISR phase space choice & ME corrections    (Note: MSTP(68) is not explicitly (re-)set by PYTUNE) 
+PARP(71) =       4.0000 ! FSR Q2max factor for non-s-channel procs     
+PARJ(81) =       0.2900 ! FSR Lambda_QCD scale                         
+MSTP(81) =            1 ! UE model                                     
+PARP(82) =       2.0000 ! UE IR cutoff at reference ecm                
+PARP(89) =    1800.0000 ! UE IR cutoff reference ecm                   
+PARP(90) =       0.2500 ! UE IR cutoff ecm scaling power               
+MSTP(82) =            4 ! UE hadron transverse mass distribution       
+PARP(83) =       0.5000 ! UE mass distribution parameter               
+PARP(84) =       0.4000 ! UE mass distribution parameter               
+PARP(85) =       0.9000 ! UE gg colour correlated fraction             
+PARP(86) =       0.9500 ! UE total gg fraction                         
+MSTP(91) =            1 ! BR primordial kT distribution                
+PARP(91) =       1.0000 ! BR primordial kT width <|kT|>, default=1.               
+PARP(93) =       5.0000 ! BR primordial kT UV cutoff                   
+MSTJ(11) =            4 ! HAD choice of fragmentation function(s)      
+PARJ(54) =      -0.0500 ! HAD charm parameter                          
+PARJ(55) =      -0.0050 ! HAD bottom parameter                         
+!PARJ(21) =       0.3600 ! HAD fragmentation pT *
+!PARJ(41) =       0.3000 ! HAD string parameter a *
+!PARJ(42) =       0.5800 ! HAD string parameter b *
+!PARJ(46) =       1.0000 ! HAD Lund(=0)-Bowler(=1) rQ (rc)
+!PARJ(47) =       1.0000 ! HAD Lund(=0)-Bowler(=1) rQ (rc)
+! ----------- Now all the CKINs for pythia ----------
+CKIN(3)=5.
+! ----------- Set up the random number seed ---------
+!MRPY(1)=9  ! random number seed for pyr
+!MRPY(2)=0  ! flag to reset the random number seed

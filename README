@@ -1,0 +1,109 @@
+============Overview==============================
+This program is made based on the revised version
+of PYTHIA6.4 interfaced to LHAPDF library, providing
+the accessiblity to nuclear PDFs like EPS09.
+
+A root tree maker has been made as well. Very basic
+I/O has been included to produce output root files
+with the ability of preliminary selection.
+
+A quick QA histogram manager has been added which
+collects a group of histograms as fast QA check
+in the produced root file.
+
+============How to compile========================
+1. Set up the LHAPDF lib path in the Makefile
+2. type the command 'make all'
+$Make all
+
+An executable 'main' file will be generated.
+Also a shared library will be generated 
+as lib/libEvent.so .
+
+============How to Run============================
+To run this program:
+$./main < inputfile
+A file named 'pythia.root' will be generated.
+
+$./main --out=output.root < inputfile
+A root file named 'output.root' will be generated.
+
+You can also check the available options by
+$./main --help
+
+Input parameter definition can be found in the
+example input file examples/input.data_RHIC-tuneA
+
+To run multiple jobs, you need to specify the
+random number seed with MRPY(1) and MRPY(2) in
+the input file.
+
+A preselector has been hard coded to cut events
+with jpsi produced in the output root file
+which is disabled by default. You can also
+customize your own selection rules in the
+selector(Event *) function implemented
+in main.C .
+If you want to make such a selection, you can
+enable the selector by
+$./main --out=output.root --filter < inputfile
+
+
+===============How to read=======================
+To read a event sample, you need to load the shared
+library lib/libEvent.so in your root session or 
+working macro with:
+gSystem->Load("lib/libEvent.so");
+
+The accessible variables/member functions for an
+event or a particle can be investigated in include/Event.h
+
+Then you can access the event/particle wise variables
+in CINT sessions:
+final state pion pt
+[0] mcTree->Draw("fPt","fKS==1&&fPid==211")
+
+Or you can loop them in a macro,like what has been done
+in the examples/read.C
+
+In the final output target beam pointing to +z direction,
+while projectile goes to -z direction
+
+===============File systems======================
+in top dir:
+=======================================================================
+	main.C				main program coordinates event generation and I/O.
+	pythia-6.4.25.f		pythia file with modifications interfaced to LHAPDF.
+	pyMainRHIC.f		init routine which reads parameters from input
+						and call pythia initialization routines.
+
+in src/:
+=======================================================================
+	src/Event.cxx		event definition for the tree maker.
+	src/HistMaker.cxx	QA hist manager definition.
+
+in include/:
+=======================================================================
+	include/Event.h				decalaration in tree maker.
+	include/HistMaker.h			decalaration for hist manager.
+	include/pythia.inc			pythia data common blocks.
+	include/pythiaWrapper.h		c++ wrapper for the pythia data/functions.
+			
+in cint/:
+=======================================================================
+	cint/Linkdef.h		dictionary link def for the event/hist manager classes.
+
+in lib/:
+=======================================================================
+	lib/libEvent.so		shared library generated from compiling, should
+						be loaded when reading a event tree.
+
+in examples/:
+=======================================================================
+	examples/read.C		a macro showing how to read from the generated event
+						tree.
+	examples/input.data_RHIC-tuneA	input file to generate hard pp events
+	examples/input.data_RHIC-Jpsi	input file to generate Jpsi events
+
+
+Created by liang 05/04/2014
