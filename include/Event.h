@@ -57,7 +57,7 @@ public:
 	ParticleMC();
 
 	///allow copy another particle
-	ParticleMC(const ParticleMC &orig);
+	ParticleMC(const ParticleMC &track);
 
 	///destructor
 	virtual ~ParticleMC() { this->Clear();}

@@ -86,9 +86,18 @@ int main(int argc, char** argv){
 		if(iLoop%nPrint==0&&iLoop!=iLoopLast) cout << iLoop << " events generated" << endl;
 		iLoopLast = iLoop;
 		//generate 1 event
+//		call_pyeevt(0,3.5);
 		call_pyevnt();
 		//if bad event skip this one
 		if(pypars.msti[60]==1) continue;
+
+		//find sphericity axis
+		double sph;
+		double apl;
+		call_pysphe(sph, apl);
+
+		//Rotate event so that sphericity axis is along z axis
+		call_pyedit(31);
 
 		if(iLoop<5) call_pylist(2);
 

@@ -6,7 +6,7 @@
 #                                                                      #
 ########################################################################
 
-MAIN = main
+MAIN = main_LEP
 #PYUSR = pyMainRHIC
 PYUSR = pyMainLEP
 PYTHIA = pythia-6.4.25

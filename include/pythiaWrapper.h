@@ -119,15 +119,19 @@ extern "C" {
 #define pyhepc pyhepc_ 
 #define pyinit pyinit_
 #define pylist pylist_
+#define pyedit pyedit_
 #define pystat pystat_
 #define pyevnt pyevnt_
+#define pyeevt pyeevt_
 #define upinit upinit_
 #define upevnt upevnt_
     extern "C" {
         void pyhepc(int*);
         void pyinit(const char*,const char*,const char*,double*,int,int,int);
         void pylist(int*);
+        void pyedit(int*);
         void pystat(int*);
+        void pyeevt(int*, double*);
         void pyevnt();
         void upinit();
         void upevnt();
@@ -140,7 +144,17 @@ inline void call_pyinit( const char* frame, const char* beam, const char* target
 { pyinit( frame,beam,target,&win,strlen(frame),strlen(beam),strlen(target) ); }
 inline void call_pylist( int mode ){ pylist( &mode ); }
 inline void call_pystat( int mode ){ pystat( &mode ); }
+inline void call_pyedit( int mode ){ pyedit( &mode ); }
 inline void call_pyevnt(){ pyevnt(); }
+inline void call_pyeevt(int flavor, double ecm){ pyeevt(&flavor, &ecm); }
+
+#define pysphe pysphe_
+extern "C" {
+	void pysphe(double*, double*);
+}
+
+inline void call_pysphe(double sph, double apl){ pysphe(&sph, &apl); }
+
 
 #define pdfsta pdfsta_
 extern "C" {
