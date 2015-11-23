@@ -177,6 +177,8 @@ extern "C" {
 // originally strip from the fortran pythia main function
 // read in the input file parameters setup and call initialization
 // routines for pythia6
+// 1st par: number of events to run
+// 2nd par: every number of events to print
 #define runpyinit runpyinit_
 extern "C" {
 	void runpyinit(int*, int*);

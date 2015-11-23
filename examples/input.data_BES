@@ -1,6 +1,6 @@
 11, 11        ! target beam type, projectile beam type
-200, 200           ! target beam energy, projectile beam energy
-10,10          ! Number of events 
+1.75,1.75           ! target beam energy, projectile beam energy
+1000000,10000          ! Number of events 
 201				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
 197,79				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
 MSEL=1
@@ -38,7 +38,7 @@ MSEL=1
 ! MSTP(43) =            3 !
 !MSTP(51) =        10151 ! CTEQ 6m PDF set for proton 
 !MSTP(52) =            1 ! PDF set internal (=1) or pdflib (=2)        
-!PARP(2)  =            3 ! minimum allowed c.m.s energy
+PARP(2)  =            3 ! minimum allowed c.m.s energy
 !PARP(62) =       1.0000 ! ISR IR cutoff                               
 !PARP(64) =       1.0000 ! ISR renormalization scale prefactor          
 !PARP(67) =       4.0000 ! ISR Q2max factor                             

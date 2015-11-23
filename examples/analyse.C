@@ -41,7 +41,8 @@ void analyse(){
 	//make the chain
 	TChain *tree = new TChain("mcTree");
 	//read the data file
-	tree->Add("../pythia.root");
+//	tree->Add("../pythia_BES.root");
+	tree->Add("../pythia_ee_200GeV.root");
 
 	if(tree->GetEntries()<=0) cout<<" File not opened!"<<endl;
 
@@ -52,7 +53,7 @@ void analyse(){
 
 	TH1::SetDefaultSumw2();//to get the bin error saved
 	//book hist
-	int Npoints=8;
+	int Npoints=20;
 	TH1D *h_final_eta_per_event[Npoints];
 	TH1D *h_final_eta[Npoints];
 	TH1D *h_product_per_event[Npoints];
@@ -62,7 +63,8 @@ void analyse(){
 
 	int power_start=0;
 	for(int i(0); i<Npoints; i++){
-		int Nbins=pow(2, i+power_start);
+//		int Nbins=pow(2, i+power_start);
+		int Nbins=i+1;
 		h_final_eta_per_event[i] = new TH1D(Form("h_final_eta_per_event%d",i), "final #eta; #eta; counts", Nbins, -5, 5);
 		h_product_per_event[i] = new TH1D(Form("h_product_per_event%d",i), "final #eta; #eta; counts", Nbins, -5, 5);
 
@@ -87,12 +89,13 @@ void analyse(){
 		for(int itrack(0); itrack<event->GetNTrack(); itrack++){
 			particle = event->GetTrack(itrack);
 			//analyse the final state particles
-			if(particle->GetKS()==1&&fabs(particle->GetEta())<etaCut){
+			if(particle->GetKS()==1&&fabs(particle->GetEta())<etaCut&&particle->GetPt()<3){
 				//exclude n because it can not be observed in the detector
-				if(abs(particle->GetPid())!=2112){
+//				if(abs(particle->GetPid())!=2112){
+			
 					for(int iset(0); iset<Npoints; iset++)
 						h_final_eta_per_event[iset]->Fill(particle->GetRapidity());
-				}
+//				}
 			}
 		}//for
 
@@ -130,10 +133,10 @@ void analyse(){
 		
 		//sum over the kinematic bin to get Fq and its error
 		double error = -1;
-		double value = h_moments[ipoint]->IntegralAndError(-1,-1,error)/h_moments[ipoint]->GetSize();
+		double value = h_moments[ipoint]->IntegralAndError(-1,-1,error)/h_moments[ipoint]->GetNbinsX();
 
 		//set the value and error to the graph
-		gr->SetPoint(ipoint, h_moments[ipoint]->GetSize(), value);
+		gr->SetPoint(ipoint, h_moments[ipoint]->GetNbinsX(), value);
 		gr->SetPointError(ipoint, 0, error);
 	}
 
@@ -142,13 +145,14 @@ void analyse(){
 
 
 	//save the hist to an root file
-	TFile *outFile = new TFile("analyse_hist.root","recreate");
+/*	TFile *outFile = new TFile("analyse_hist.root","recreate");
 	gr->Write();
 	for(int ipoint(0); ipoint<Npoints; ipoint++){
 		h_final_eta[ipoint]->Write();
 		h_product[ipoint]->Write();
 		h_moments[ipoint]->Write();
 	}
+*/
 }
 
 

@@ -1,13 +1,9 @@
-2212, 2212        ! target beam type, projectile beam type
-500, 500          ! target beam energy, projectile beam energy
-100,10          ! Number of events 
+2212, 11        ! target beam type, projectile beam type
+100, 30          ! target beam energy, projectile beam energy
+10,10          ! Number of events 
 201				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
 197,79				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
-MSEL=0          ! choose any subprocess
-MSUB(86)=1      ! gg->Jpsi+g
-MSUB(87)=1      ! gg->chi_c0+g
-MSUB(88)=1      ! gg->chi_c1+g
-MSUB(89)=1      ! gg->chi_c2+g
+MSEL=1
 !MSUB(91)=0      ! Elastic
 !MSUB(92)=1      ! Singly diffractive (XB)
 !MSUB(93)=1      ! Singly diffractive (AX)
@@ -31,7 +27,7 @@ MSUB(89)=1      ! gg->chi_c2+g
 !MSUB(115)=1 
 ! mstp(5)=100   ! this selects tune A
 ! MSTP(43) =            3 !
-MSTP(51) =        10150 ! CTEQ 6m PDF set for proton 
+MSTP(51) =        10550 ! CTEQ 66 PDF set for proton 
 MSTP(52) =            2 ! PDF set internal (=1) or pdflib (=2)        
 PARP(62) =       1.0000 ! ISR IR cutoff                               
 PARP(64) =       1.0000 ! ISR renormalization scale prefactor          

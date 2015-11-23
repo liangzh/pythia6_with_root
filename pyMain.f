@@ -45,6 +45,8 @@ c ---------------------------------------------------------------------
 
 C...Read switch for output file yes or no
 c       READ(*,*) outname
+C...Read proj and tgt beam particle type
+       READ(*,*) ttype, ptype
 C...Read parameters for PYINIT call ( beam and target particle energy).
 c       READ(inUnit,*) pbeam1, pbeam2
        READ(*,*) pbeam1, pbeam2
@@ -72,6 +74,10 @@ c ---------------------------------------------------------------------
        write(*,*) '*********************************************'
 C       call PYLIST(11)
 C       call PYLIST(12)
+
+c...Reset beam mass according to the specified type
+       pmass1=PYMASS(ptype)
+       pmass2=PYMASS(ttype)
        
 c...initialie done, close input unit
 c       close(inUnit)
@@ -104,7 +110,19 @@ C     beam2 is defined in negative z and as beam
       P(1,1)=0.0  
       P(1,2)=0.0  
       P(1,3)=-pbeam2
-      call pyinit ('3MOM','p+','p+',WIN)
+
+      if ((ttype.eq.ptype).and.(ttype.eq.2212)) then
+         call pyinit ('3MOM','p+','p+',WIN)
+      elseif ((ttype.eq.2212).and.(ptype.eq.11)) then
+         call pyinit ('3MOM','gamma/e-','p+',WIN)
+      elseif ((ttype.eq.ptype).and.(ttype.eq.11)) then
+         call pyinit ('3MOM','e+','e-',WIN)
+      else
+         write(*,*) 'Invalid target/beam particle types'
+         stop
+      endif
+
+
 
 c ---------------------------------------------------------------------
 C...Event generation loop

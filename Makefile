@@ -6,9 +6,9 @@
 #                                                                      #
 ########################################################################
 
-MAIN = main_LEP
+MAIN = main
 #PYUSR = pyMainRHIC
-PYUSR = pyMainLEP
+PYUSR = pyMain
 PYTHIA = pythia-6.4.25
 EVENT = Event
 HIST = HistMaker
