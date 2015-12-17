@@ -26,9 +26,9 @@ ParticleMC::ParticleMC(){
 	fDaughter1 = -999;
 	fDaughter2 = -999;
 
-   //derived quantities
-    fPt = 0; 
-    fP = 0;          
+  //derived quantities
+	fPt = 0; 
+	fP = 0;          
 	fRapidity = -19;	 
 	fEta = -19;
 	fTheta = 0;
@@ -115,7 +115,8 @@ void ParticleMC::ComputeDerived(){
 ///Event initialize
 ///assign value to event wise variables and instantiate fParticles
 Event::Event()
-: fParticles("ParticleMC", 500) {
+: fParticles("ParticleMC", 1000) {
+	fNEvent = -1;
 	fNTracks = 0;
 	fFSNTracks = 0;
 	fProcess = -999;
@@ -124,9 +125,13 @@ Event::Event()
 	fProjParton = -999;
 	fProjPartonX = 0;
 	fPt2_hat = 0;
+	fOutParton1 = -999;
+	fOutParton2 = -999;
+	fLastTrack = NULL;
 }
 
 void Event::Clear(Option_t *){
+	fNEvent = -1;
 	fNTracks = 0;
 	fFSNTracks = 0;
 	fProcess = -999;
@@ -135,6 +140,9 @@ void Event::Clear(Option_t *){
 	fProjParton = -999;
 	fProjPartonX = 0;
 	fPt2_hat = 0;
+	fOutParton1 = -999;
+	fOutParton2 = -999;
+	fLastTrack = NULL;
 	fParticles.Clear();
 }
 
@@ -148,6 +156,8 @@ void Event::Build(const Int_t &index){
 	fProjParton = pypars.msti[14];
 	fProjPartonX = pypars.pari[32];
 	fPt2_hat = pypars.pari[17];
+	fOutParton1 = pypars.msti[20];
+	fOutParton2 = pypars.msti[21];
 	
 	//add tracks to the current event
 	for(int i=0; i<fNTracks; i++){
@@ -155,20 +165,35 @@ void Event::Build(const Int_t &index){
 		particle.Set(i);
 		AddTrack(particle);
 		fLastTrack = &particle;
+
+/*		ParticleMC *particle = (ParticleMC*)fParticles.ConstructedAt(i);
+		particle->Set(i);
+		fLastTrack = particle;
+*/
 		//count number of final state particles
 		if(particle.GetKS()==1)
+//		if(particle->GetKS()==1)
 			fFSNTracks++;
 	}
 }
 
+///Print current particle list
+void Event::PrintParticles(){
+	for(int itrack=0; itrack<this->GetNTrack(); itrack++){
+		ParticleMC *particle = this->GetTrack(itrack);
+		std::cout<<"index="<<itrack<<" id="<<particle->GetPid()<<" KS="<<particle->GetKS()<<std::endl;
+	}
+}
+
 ///add one track to the particle list
-void Event::AddTrack(const ParticleMC &particle ){
+void Event::AddTrack(const ParticleMC &particle){
    // To avoid calling the very time consuming operator new for each track,
    // the standard but not well know C++ operator "new with placement"
    // is called. If tracks[i] is 0, a new Track object will be created
    // otherwise the previous Track[i] will be overwritten.
 	new(fParticles[fParticles.GetEntries()]) ParticleMC(particle);
 }
+
 
 ///get one track from the particle list
 ParticleMC* Event::GetTrack(const Int_t &indx) const{

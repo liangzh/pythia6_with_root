@@ -79,8 +79,8 @@ in top dir:
 	main.C				main program coordinates event generation and I/O.
 	pythia-6.4.25.f		pythia file with modifications interfaced to LHAPDF.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	pyMainRHIC.f		init routine which reads parameters from input
-	pyMainLEP.f			and call pythia initialization routines for pp/ee
+	pyMain.f		init routine which reads parameters from input
+							and call pythia initialization routines for pp/ee/ep
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 in src/:

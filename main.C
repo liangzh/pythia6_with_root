@@ -26,6 +26,8 @@
 #include "Event.h"
 //used to create some QA plots
 #include "HistMaker.h"
+//used to do analysis
+#include "Analysis.h"
 
 using std::cout;
 using std::endl;
@@ -70,18 +72,20 @@ int main(int argc, char** argv){
 
 	//make hist manager, save some QA plots
 	HistMaker hist;
+	Analysis worker;
 
 	Event *event = new Event();
-	tree.Branch("event", "Event", &event, 32000, 99);
+//	tree.Branch("event", "Event", &event, 32000, -1);
 	//Auto-save every 500 MB
-	tree.SetAutoSave(500LL * 1024LL * 1024LL);
+//	tree.SetAutoSave(500LL * 1024LL * 1024LL);
 	
-	int iLoop = 0;
+	int iLoop = 0;//event accept loop
+	long long iTrial = 0;//event generation loop, must be consistent with pythia internal loop
 	int iLoopLast = -1;
 	while(iLoop<nEvent){
 
 		//clear the current event container
-		event->Clear();
+		if(iTrial>0) event->Clear();
 
 		if(iLoop%nPrint==0&&iLoop!=iLoopLast) cout << iLoop << " events generated" << endl;
 		iLoopLast = iLoop;
@@ -90,25 +94,40 @@ int main(int argc, char** argv){
 		//if bad event skip this one
 		if(pypars.msti[60]==1) continue;
 
-		if(iLoop<5) call_pylist(2);
+		event->Build(iTrial);//dump the pythia event data to a Event object
 
-		event->Build(iLoop);//dump the pythia event data to a Event object
+		if(iTrial<5) {
+			call_pylist(2);
+			event->PrintParticles();
+			cout<<"iLoop="<<iLoop<<" iTrial:"<<iTrial<<endl;
+		}
 
+
+		iTrial++;
 		//dump the current event data to the QA hist
 		hist.Hfill(event);
+
+		worker.FillHist(event);
+		//test if the current event is what we want
+		if(worker.GetStatus()==false) continue; //if analysis not accepted generate another
 
 		if( doSelect == 1 && !selector(event) ) continue;
 
 		//fill the tree
-		tree.Fill();
+//		tree.Fill();
 
+		if(iLoop<20)
+			cout<<"accept 1 event!: iLoop="<<iLoop<<endl;
 		//update loop flag
 		iLoop++;
 
 	}//event loop
 
-	//write tree data
-	file.Write();
+	//write tree data and hist data
+	file.cd();
+//	tree.Write();
+	hist.Hwrite(&file);
+	worker.WriteResults(&file);
 	//write cross section data
 	write_run_data(file);
 
@@ -123,8 +142,10 @@ int main(int argc, char** argv){
 		 << pypars.pari[0] << " mb" << endl;
 	cout << "Total Number of generated events: " << pypars.msti[4] << endl;
 	cout << "Total Number of trials: " << pyint5.ngen[2][0] << endl;
+	cout << "Integrated Lumi: " << pyint5.ngen[2][0]/pypars.pari[0]*1E-12 << " fb^-1" << endl;
 
 	call_pdfsta();
+
 
 	return 0;
 }
@@ -140,7 +161,7 @@ bool selector(Event *e){
 	for(Int_t itrack(0); itrack<e->GetNTrack(); itrack++){
 		particle = e->GetTrack(itrack);
 		//if found a Jpsi in the particle list, trigger this event
-		if(particle->GetPid() == 443) {
+		if(abs(particle->GetPid()) == 413) {
 		//if found a final state pi+, trigger this event
 //		if(particle->GetPt()>2&&particle->GetPid()==211&&particle->GetKS()==1) {
 			isPass = true;

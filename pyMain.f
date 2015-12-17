@@ -98,8 +98,8 @@ C      call rndmq (idum1,idum2,initseed,' ')
 C
       sqrts=sqrt(4*pbeam1*pbeam2)
       write(*,*) '*********************************************'
-      write(*,*) '1st proton beam energy:', pbeam1, 'GeV'
-      write(*,*) '2nd proton beam energy:', pbeam2, 'GeV'
+      write(*,*) 'target beam energy:', pbeam1, 'GeV'
+      write(*,*) 'projectile beam energy:', pbeam2, 'GeV'
       write(*,*) 'resulting sqrt(s):', sqrts, 'GeV'
       write(*,*) '*********************************************'
 C     beam1 is defined in positive z and as target
@@ -111,6 +111,14 @@ C     beam2 is defined in negative z and as beam
       P(1,2)=0.0  
       P(1,3)=-pbeam2
 
+      !switch off all the decay channel for D0 other than the D0->pi+K
+      !used only for the DDbar correlation study!!!!!!
+      do I = MDCY(125,2) , MDCY(125,2) + MDCY(125, 3) - 1
+         if (I.ne.763) then
+            MDME(I,1)=0
+         endif
+      enddo
+ 
       if ((ttype.eq.ptype).and.(ttype.eq.2212)) then
          call pyinit ('3MOM','p+','p+',WIN)
       elseif ((ttype.eq.2212).and.(ptype.eq.11)) then
@@ -122,6 +130,8 @@ C     beam2 is defined in negative z and as beam
          stop
       endif
 
+      write(*,*) 'The system is running with center of mass
+     & energy:',PARI(101), ' GeV'
 
 
 c ---------------------------------------------------------------------

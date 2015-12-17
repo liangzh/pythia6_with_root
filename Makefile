@@ -12,6 +12,7 @@ PYUSR = pyMain
 PYTHIA = pythia-6.4.25
 EVENT = Event
 HIST = HistMaker
+ANA = Analysis
 
 TOP = $(PWD)
 EXE = $(MAIN)
@@ -23,7 +24,7 @@ GFC = gfortran -g
 GCC = g++ 
 
 #ROOTCFLAGS =  $(COPT) $(shell root-config --cflags)
-ROOTCOPT = -pthread -m64 -std=c++11 -fPIC
+ROOTCOPT = -pthread -m64 -std=c++11 -fPIC -g
 
 ############################# libraries ################################
 
@@ -50,11 +51,11 @@ ROOTCFLAGS = $(ROOTCOPT) $(ROOTINC)
 all:  $(EXE) 
 
 clean:
-	rm -f $(EXE) $(MAIN).o $(PYTHIA).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o lib/libEvent.so cint/*Dict*
+	rm -f $(EXE) $(MAIN).o $(PYTHIA).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o src/$(ANA).o lib/libEvent.so cint/*Dict*
 
 
-$(EXE): $(MAIN).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o lib/libEvent.so
-	$(LD) -o $(EXE)  $(MAIN).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o lib/libEvent.so $(LDOPT)
+$(EXE): $(MAIN).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o src/$(ANA).o lib/libEvent.so
+	$(LD) -o $(EXE)  $(MAIN).o $(PYUSR).o src/$(EVENT).o src/$(HIST).o src/$(ANA).o $(TOP)/lib/libEvent.so $(LDOPT)
 
 $(PYTHIA).o: $(PYTHIA).f
 	$(GFC) -c $(FOPT) $(INC) $<
@@ -68,15 +69,18 @@ src/$(EVENT).o: src/$(EVENT).cxx include/$(EVENT).h
 src/$(HIST).o: src/$(HIST).cxx include/$(HIST).h
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $<  -o src/$(HIST).o
 
+src/$(ANA).o: src/$(ANA).cxx include/$(ANA).h
+	$(GCC) -c $(ROOTCFLAGS) $(INC) $<  -o src/$(ANA).o
+
 
 #make dictionary for the Event class
-cint/MyDict.cxx: include/HistMaker.h include/pythiaWrapper.h include/Event.h cint/Linkdef.h
-	rootcint -f $@ -c $(ROOTCFLAGS)  $(INC) -p HistMaker.h Event.h cint/Linkdef.h
+cint/MyDict.cxx: include/HistMaker.h include/Analysis.h include/pythiaWrapper.h include/Event.h cint/Linkdef.h
+	rootcint -f $@ -c $(ROOTCFLAGS)  $(INC) -p HistMaker.h Analysis.h Event.h cint/Linkdef.h
 
 cint/MyDict.o: cint/MyDict.cxx
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $< -o cint/MyDict.o
 	 
-lib/libEvent.so: cint/MyDict.o src/$(EVENT).o src/$(HIST).o $(PYTHIA).o
+lib/libEvent.so: cint/MyDict.o src/$(EVENT).o src/$(HIST).o src/$(ANA).o $(PYTHIA).o
 	mkdir -p lib; g++ -shared -o $@  $(ROOTCFLAGS) $(INC) $^
 
 $(MAIN).o: $(MAIN).C include/pythiaWrapper.h

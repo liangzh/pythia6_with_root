@@ -12,5 +12,6 @@
 #pragma link C++ class ParticleMC+;
 #pragma link C++ class Event+;
 #pragma link C++ class HistMaker+;
+#pragma link C++ class Analysis+;
 
 #endif

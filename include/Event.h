@@ -27,14 +27,14 @@ class ParticleMC : public TObject {
 
 private:
 	///read in identities 
-	Double_t    fPx;           ///<X component of the momentum P(I,1)
-	Double_t    fPy;           ///<Y component of the momentum P(I,2)
-	Double_t    fPz;           ///<Z component of the momentum P(I,3)
-	Double_t    fE;           ///<E f the particle P(I,4)
-	Double_t	fMass;        ///<The mass of this particle P(I,5)
-	Double_t    fVx;           ///<X component of the position V(I,1)
-	Double_t    fVy;           ///<Y component of the position V(I,2)
-	Double_t    fVz;           ///<Z component of the position V(I,3)
+	Float_t    fPx;           ///<X component of the momentum P(I,1)
+	Float_t    fPy;           ///<Y component of the momentum P(I,2)
+	Float_t    fPz;           ///<Z component of the momentum P(I,3)
+	Float_t    fE;           ///<E f the particle P(I,4)
+	Float_t		 fMass;        ///<The mass of this particle P(I,5)
+	Float_t    fVx;           ///<X component of the position V(I,1)
+	Float_t    fVy;           ///<Y component of the position V(I,2)
+	Float_t    fVz;           ///<Z component of the position V(I,3)
 
 	Int_t	   fPid;		///<MC Pid of this particle K(I,2)
 	Int_t	   fKS;		///<MC status of this particle K(I,1)
@@ -45,12 +45,12 @@ private:
 
 
     ///derived quantities
-	Double_t    fPt;           ///<T component of the momentum
-	Double_t    fP;           ///<magnitude of the momentum
-	Double_t	fEta;		 ///<Eta of the particle
-	Double_t	fRapidity;	 ///<Rapidity of the particle
-	Double_t	fTheta;		 ///<Theta of the particle
-	Double_t	fPhi;	 ///<Phi of the particle
+	Float_t    fPt;           ///<T component of the momentum
+	Float_t    fP;           ///<magnitude of the momentum
+	Float_t	fEta;		 ///<Eta of the particle
+	Float_t	fRapidity;	 ///<Rapidity of the particle
+	Float_t	fTheta;		 ///<Theta of the particle
+	Float_t	fPhi;	 ///<Phi of the particle
 
 public:
 	///constructuor
@@ -67,20 +67,20 @@ public:
 
 	//inline functions
 	///read data
-	Double_t       GetPx() const { return fPx; }
-	Double_t       GetPy() const { return fPy; }
-	Double_t       GetPz() const { return fPz; }
-	Double_t	   GetE() const { return fE; }
-	Double_t       GetPt() const { return fPt; }
-	Double_t       GetP() const { return  fP; }
-	Double_t	   GetTheta() const { return fTheta; }
-	Double_t	   GetPhi() const { return fPhi; }
-	Double_t	   GetEta() const { return fEta; }
-	Double_t	   GetRapidity() const { return fRapidity; }
-	Double_t       GetMass() const { return fMass; }
-	Double_t       GetVx() const { return fPx; }
-	Double_t       GetVy() const { return fPy; }
-	Double_t       GetVz() const { return fPz; }
+	Float_t       GetPx() const { return fPx; }
+	Float_t       GetPy() const { return fPy; }
+	Float_t       GetPz() const { return fPz; }
+	Float_t	   GetE() const { return fE; }
+	Float_t       GetPt() const { return fPt; }
+	Float_t       GetP() const { return  fP; }
+	Float_t	   GetTheta() const { return fTheta; }
+	Float_t	   GetPhi() const { return fPhi; }
+	Float_t	   GetEta() const { return fEta; }
+	Float_t	   GetRapidity() const { return fRapidity; }
+	Float_t       GetMass() const { return fMass; }
+	Float_t       GetVx() const { return fPx; }
+	Float_t       GetVy() const { return fPy; }
+	Float_t       GetVz() const { return fPz; }
 
 	Int_t		GetIndex() const { return fIndex; }
 	Int_t		GetParent() const { return fOrig; }
@@ -122,6 +122,8 @@ private:
 	Int_t fFSNTracks; ///<number of FS particles in the event
 	Int_t fTargetParton; ///<parton pdg from target MSTI(16)
 	Int_t fProjParton; ///<parton pdg from projectile MSTI(15)
+	Int_t fOutParton1; ///<parton pdg from target MSTI(21)
+	Int_t fOutParton2; ///<parton pdg from projectile MSTI(22)
 	Double_t fTargetPartonX; ///<parton x from target PARI(34)
 	Double_t fProjPartonX; ///<parton x from projectile PARI(33)
 
@@ -139,6 +141,8 @@ public:
 	void Build(const Int_t &index);
 
 	void AddTrack(const ParticleMC &particle);
+
+	void PrintParticles(); ///print current particle list
 
 	/**
 	 * Get a pointer to one track from the current Event
@@ -160,6 +164,11 @@ public:
 	Int_t GetTargetParton() const { return fTargetParton; }
 
 	Int_t GetProjParton() const { return fProjParton; }
+
+	Int_t GetOutParton1() const { return fOutParton1; }
+
+	Int_t GetOutParton2() const { return fOutParton2; }
+
 
 	Double_t GetTargetPartonX() const { return fTargetPartonX; }
 

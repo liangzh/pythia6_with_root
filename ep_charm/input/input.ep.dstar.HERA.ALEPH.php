@@ -1,0 +1,136 @@
+2212, 11        ! target beam type, projectile beam type
+920, 27.6          ! target beam energy, projectile beam energy
+10000000,1000          ! Number of events 
+001				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
+1,1				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
+MSEL=2       ! 4: c-cbar production channel turned on
+PMAS(4,1)=1.5    ! charm mass to be used when for charm production only
+MSTP(14)=30
+MSTP(15)=0
+MSTP(16)=1
+MSTP(17)=4 ! MSTP 17=6 is the R-rho measured as by hermes, =4 Default
+MSTP(18)=3
+MSTP(19)=1 ! Hermes MSTP-19=1 different Q2 suppression, default = 4
+MSTP(20)=0 ! Hermes MSTP(20)=0 , default MSTP(20)=3
+MSTP(32)=8 ! definition of Q2, D=8 * changed to 2 according to the pp tuning
+MSTP(38)=4
+MSTP(51)=10050 ! if pdflib is linked than non pythia-pdfs are available,                         like MSTP(51)=4046 
+MSTP(52)=2   ! ---> pdflib used MSTP   52=2
+MSTP(53)=3
+MSTP(54)=1
+MSTP(55)=5
+MSTP(56)=1
+MSTP(57)=1
+MSTP(58)=5
+MSTP(59)=1
+MSTP(60)=7
+MSTP(61)=2      ! D=2 initial state parton shower * changed to 1 according to the pp tuning
+MSTP(71)=1      ! D=1 final state parton shower 1/0 on/off
+MSTP(81)=0      ! Multiple interactions off (D=0)
+MSTP(82)=1      ! D=1 Shouldn't matter if MSTP(81)=0
+MSTP(91)=1      ! D=1 gauss distribution of primodial kt in hadron, 0 no kt
+MSTP(92)=3      ! hermes MSTP(92)=4
+MSTP(93)=1      ! D=1 gauss distribution of primodial kt in photon, 0 no kt
+MSTP(101)=3
+MSTP(102)=1
+MSTP(111)=1
+MSTP(121)=0
+! ----------- Now all the PARPs -----------
+!PARP(2)=4     ! lower cut for accepted c.m.s energy
+PARP(13)=1
+PARP(18)=0.40 ! hermes PARP(18)=0.17
+PARP(34)=1.0   ! Q2 scale defined by MSTP(32) multiplied by PARP(34) when used in PDF or DSS fragmentation
+PARP(72)=0.295  !D=0.25 lambda for alpha_s in time-like parton shower
+PARP(81)=1.9
+PARP(89)=1800
+PARP(90)=0.16
+PARP(91)=0.40  ! D=0.4, intrisic kt width for parton in hadron
+PARP(93)=5.		! D=5, Max primordial kt in hadron
+PARP(99)=0.40  ! D=0.4, intrisic kt width for parton in photon
+PARP(100)=5		! D=5, Max primordial kt in photon
+PARP(102)=0.28
+PARP(103)=1.0
+PARP(104)=0.8
+PARP(111)=2.
+PARP(161)=3.00 ! D=3, Vector couplings, changed from defaults
+PARP(162)=24.6
+PARP(163)=18.8
+PARP(164)=11.5
+PARP(165)=0.47679
+PARP(166)=0.67597 ! PARP165/166 are linked to MSTP17 as R_rho of HERMES is used
+! PARP(166)=0.5    
+! ----------- Now come all the switches for Jetset -----------
+PARJ(1)=0.108     !D=0.1 P(qq)/P(q) tuned for D* based on ALEPH
+PARJ(2)=0.286     !D=0.3 P(s)/P(u) tuned for D* based on ALEPH
+PARJ(11)=0.553    !D=0.5 P(S=1) d,u tuned for D* based on ALEPH
+PARJ(12)=0.47     !D=0.6 P(S=1) s tuned for D* based on ALEPH
+PARJ(13)=0.65     !D=0.75 P(S=1) c,b tuned for D* based on ALEPH
+PARJ(14)=0.12     !D=0.0 axial tuned for D* based on ALEPH
+PARJ(15)=0.04     !D=0.0 scalar tuned for D* based on ALEPH
+PARJ(16)=0.12     !D=0.0 axial tuned for D* based on ALEPH
+PARJ(17)=0.2      !D=0.0 tensor tuned for D* based on ALEPH
+PARJ(19)=0.55     !D=1.0 extra baryon suppression D* ALEPH
+PARJ(21)=0.4     ! D=0.4 fragmentaion pt( also used in my dss subroutine )
+PARJ(26)=0.276    !D=0.4 extra eta' suppressiona D* ALEPH
+PARJ(32)=1.0
+PARJ(33)= 0.80   ! energy threshold to stop string breaking process, D=0.8
+PARJ(41)= 0.40    !D=0.3 lund frag a D* ALEPH
+PARJ(42)= 0.885   !D=0.58 lund frag b D* ALEPH
+PARJ(45)= 0.5
+PARJ(54)=-0.04    !D=-0.05 peterson -epsilon_c D* ALEPH
+PARJ(55)=-0.002    !D=-0.005 peterson -epsilon_b D* ALEPH
+PARJ(82)=1.39    !D=1.0 Q0 D* ALEPH
+!----------------------------------------------------------------------
+MSTJ(1)=1         ! 0 no fragmentation, 1 lund string model
+MSTJ(12)=2        ! D=1, baryon model option tuned for D* based on the ALEPH setting
+MSTJ(45)=5
+MSTJ(46)=0        ! parton shower azimuthal corr tuned for D* based on the ALEPH setting
+MSTJ(51)=0        ! B-E correlation off tuned for D* based on the ALEPH setting
+MSTU(16)=1        ! D=1, 2 contain detailed mother daughter relationship when jetset fragment
+MSTU(112)=5
+MSTU(113)=5
+MSTU(114)=5
+! ----------- Now all the CKINs for pythia ----------
+CKIN(1)=1.
+CKIN(2)=-1.
+CKIN(3)=0.
+CKIN(4)=-1.
+CKIN(5)=1.00
+CKIN(6)=1.00
+CKIN(7)=-10.
+CKIN(8)=10.
+CKIN(9)=-40.
+CKIN(10)=40.
+CKIN(11)=-40.
+CKIN(12)=40.
+CKIN(13)=-40.
+CKIN(14)=40.
+CKIN(15)=-40.
+CKIN(16)=40.
+CKIN(17)=-1.
+CKIN(18)=1.
+CKIN(19)=-1.
+CKIN(20)=1.
+CKIN(21)=0.
+CKIN(22)=1.
+CKIN(23)=0.
+CKIN(24)=1.
+CKIN(25)=-1.
+CKIN(26)=1.
+CKIN(27)=-1.
+CKIN(28)=1.
+CKIN(31)=2.
+CKIN(32)=-1.
+CKIN(35)=0.
+CKIN(36)=-1
+CKIN(37)=0.
+CKIN(38)=-1.
+CKIN(39)=9E3    ! Min for W^2
+CKIN(40)=9E4    ! Max for W^2
+CKIN(65)=0      ! Min for Q^2
+CKIN(66)=2.       ! Max for Q^2
+CKIN(67)=0.
+CKIN(68)=-1. 
+CKIN(77)=99    ! Min for W
+CKIN(78)=295    ! Max for W
+MDCY(123,1)=0   !1 allow D*+- to decay

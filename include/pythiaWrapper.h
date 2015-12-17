@@ -25,6 +25,9 @@ extern "C" {
 //--------------------------------------------------------------------------
 // PYTHIA Common Block Declarations
 
+//index in PYHIA common blocks starts from 0 as a data array
+//while the fortran block starts from 1
+
 const int pyjets_maxn =4000;
 // COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
 extern "C" {
@@ -116,6 +119,7 @@ extern "C" {
 //--------------------------------------------------------------------------
 // PYTHIA routines declaration
 
+#define pycomp pycomp_
 #define pyhepc pyhepc_ 
 #define pyinit pyinit_
 #define pylist pylist_
@@ -126,6 +130,7 @@ extern "C" {
 #define upinit upinit_
 #define upevnt upevnt_
     extern "C" {
+				int pycomp(int*);
         void pyhepc(int*);
         void pyinit(const char*,const char*,const char*,double*,int,int,int);
         void pylist(int*);
@@ -138,6 +143,7 @@ extern "C" {
     }
 
 // define methods to hide the subtle syntax necessary to call fortran from C++
+inline int call_pycomp( int pid ) { return pycomp( &pid ); }
 inline void call_pyhepc( int mode ){ pyhepc( &mode ); }
 inline void call_pyinit( const char* frame, const char* beam, const char* target,
                   double win ) 
