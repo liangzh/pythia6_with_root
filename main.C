@@ -75,9 +75,9 @@ int main(int argc, char** argv){
 	Analysis worker;
 
 	Event *event = new Event();
-//	tree.Branch("event", "Event", &event, 32000, -1);
+	tree.Branch("event", event->ClassName(), &event, 32000, 99);
 	//Auto-save every 500 MB
-//	tree.SetAutoSave(500LL * 1024LL * 1024LL);
+	tree.SetAutoSave(500LL * 1024LL * 1024LL);
 	
 	int iLoop = 0;//event accept loop
 	long long iTrial = 0;//event generation loop, must be consistent with pythia internal loop
@@ -114,7 +114,7 @@ int main(int argc, char** argv){
 		if( doSelect == 1 && !selector(event) ) continue;
 
 		//fill the tree
-//		tree.Fill();
+		tree.Fill();
 
 		if(iLoop<20)
 			cout<<"accept 1 event!: iLoop="<<iLoop<<endl;
@@ -125,7 +125,7 @@ int main(int argc, char** argv){
 
 	//write tree data and hist data
 	file.cd();
-//	tree.Write();
+	tree.Write();
 	hist.Hwrite(&file);
 	worker.WriteResults(&file);
 	//write cross section data

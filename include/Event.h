@@ -109,7 +109,7 @@ public:
 
 	void Clear(Option_t *option="");
 
-	ClassDef(ParticleMC,1);  //A MC particle
+	ClassDef(ParticleMC,1)  //A MC particle
 };
 
 
@@ -176,7 +176,7 @@ public:
 
 	Double_t GetPt2_hat() const { return fPt2_hat; }
 
-	ClassDef(Event,1);
+	ClassDef(Event,1)
 };
 
 #endif

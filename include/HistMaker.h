@@ -7,7 +7,9 @@
 #include <Rtypes.h>
 #include <TObject.h>
 
-#include "Event.h"
+//#include "Event.h"
+
+class Event;
 
 class HistMaker {
 
@@ -39,7 +41,7 @@ public:
 	 */
 	void Hwrite(TFile *file);
 
-	ClassDef(HistMaker,1);
+	ClassDef(HistMaker,1)
 };
 
 #endif

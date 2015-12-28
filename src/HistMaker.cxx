@@ -1,4 +1,5 @@
 #include "HistMaker.h"
+#include "Event.h"
 
 ClassImp(HistMaker)
 

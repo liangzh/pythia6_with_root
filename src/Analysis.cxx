@@ -1,7 +1,10 @@
-#include "Analysis.h"
 #include "math.h"
+
+#include "Analysis.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
+
+#include "Event.h"
 
 ClassImp(Analysis)
 
@@ -159,10 +162,10 @@ void Analysis::FillHist(const Event *event){
 	int trigId = 0;
 	int trigIndex = -1;
 
-	int selectPid=421;
-	int selectQuark=4;
-//	int selectPid=321;
-//	int selectQuark=3;
+//	int selectPid=421;
+//	int selectQuark=4;
+	int selectPid=321;
+	int selectQuark=3;
 
 	if((event->GetProcess()>132 || event->GetProcess()==84)){
 		h_Parton_PGF->Fill(event->GetOutParton1());
@@ -217,12 +220,12 @@ void Analysis::FillHist(const Event *event){
 
 			//z cut for the particles
 //			if(z>0.75||z<0.25) continue;
-			if(z<0.25) continue; //used for D0 pair
-//			if(z<0.2||particle->GetKS()!=1||abs(particle->GetPid())!=selectPid||vhadron.Pt()<0.75) continue; //used for charged K pair
-			//pt cut for the particles
-			if(vhadron.Pt()<0.5||abs(particle->GetPid())!=selectPid) continue;
+//			if(z<0.25) continue; //used for D0 pair
+			if(z<0.2||particle->GetKS()!=1||abs(particle->GetPid())!=selectPid||vhadron.Pt()<1.) continue; //used for charged K pair
+			//pt cut for the D0 particles
+//			if(vhadron.Pt()<0.5||abs(particle->GetPid())!=selectPid) continue;
 
-
+/*
 			//make sure only 2 decay products for D0
 			if(particle->GetDaughter2()<=particle->GetDaughter1()||particle->GetDaughter2()>particle->GetDaughter1()+1) continue;
 
@@ -240,7 +243,7 @@ void Analysis::FillHist(const Event *event){
 			else if(abs(id1)==321&&abs(id2)!=211)
 				continue;
 			//===========decay products cut end===============================//
-
+*/
 
 //			std::cout<<"id1:"<<id1<<" id2:"<<id2<<std::endl;
 
@@ -277,7 +280,7 @@ void Analysis::FillHist(const Event *event){
 				double Pperp = (vTrig-vhadron).Pt()/2.;
 //				std::cout<<"found 1 pair, kperp:"<<kperp<<" Pperp:"<<Pperp<<std::endl;
 				//correlation limit
-				if(kperp/Pperp<0.5){
+				if(kperp/Pperp<0.333){
 					std::cout<<"accept 1 pair"<<std::endl;
 					double kt_phi = vTotal.Phi();
 					double delta_phi = vTrig.DeltaPhi(vhadron);

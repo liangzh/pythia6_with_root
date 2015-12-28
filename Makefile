@@ -74,14 +74,18 @@ src/$(ANA).o: src/$(ANA).cxx include/$(ANA).h
 
 
 #make dictionary for the Event class
+#should not use rootcint, otherwise can not Branch a tree when libEvent.so loaded
 cint/MyDict.cxx: include/HistMaker.h include/Analysis.h include/pythiaWrapper.h include/Event.h cint/Linkdef.h
-	rootcint -f $@ -c $(ROOTCFLAGS)  $(INC) -p HistMaker.h Analysis.h Event.h cint/Linkdef.h
+	rootcling -f $@ -c $(ROOTCFLAGS)  $(INC) -p HistMaker.h Analysis.h Event.h cint/Linkdef.h
+#cint/MyDict.cxx: include/HistMaker.h include/Analysis.h include/pythiaWrapper.h include/Event.h cint/Linkdef.h
+#	rootcint -f $@ -c $(ROOTCFLAGS)  $(INC) -p HistMaker.h Analysis.h Event.h cint/Linkdef.h
+
 
 cint/MyDict.o: cint/MyDict.cxx
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $< -o cint/MyDict.o
 	 
 lib/libEvent.so: cint/MyDict.o src/$(EVENT).o src/$(HIST).o src/$(ANA).o $(PYTHIA).o
-	mkdir -p lib; g++ -shared -o $@  $(ROOTCFLAGS) $(INC) $^
+	mkdir -p lib; g++  $(ROOTCFLAGS) $(INC) $^ -shared -o $@ 
 
 $(MAIN).o: $(MAIN).C include/pythiaWrapper.h
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $<

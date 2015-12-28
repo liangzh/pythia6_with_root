@@ -8,7 +8,9 @@
 #include <Rtypes.h>
 #include <TObject.h>
 
-#include "Event.h"
+//#include "Event.h"
+
+class Event;
 
 class Analysis {
 
@@ -87,7 +89,7 @@ public:
 	bool GetStatus() { return status; }
 
 
-	ClassDef(Analysis,1);
+	ClassDef(Analysis,1)
 };
 
 #endif

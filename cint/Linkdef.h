@@ -5,8 +5,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-//#pragma link C++ nestedclass;
-//#pragma link C++ nestedtypedef;
+#pragma link C++ nestedclass;
+#pragma link C++ nestedtypedef;
 
 // particle / event class
 #pragma link C++ class ParticleMC+;
