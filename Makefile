@@ -36,7 +36,10 @@ LIB = -L$(LHAPDF)/ -lLHAPDF
 ROOTGLIBS = $(shell root-config --glibs)
 
 ############################# include ################################
-INC = -Iinclude/
+#it is very important to set include path to be absolute, otherwise
+#the later usage will cause some trouble when dealing the load of
+#shared library
+INC = -I$(TOP)/include/
 ROOTINC = -I$(shell root-config --incdir) 
 
 ############################# linker - options #########################
@@ -85,7 +88,7 @@ cint/MyDict.o: cint/MyDict.cxx
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $< -o cint/MyDict.o
 	 
 lib/libEvent.so: cint/MyDict.o src/$(EVENT).o src/$(HIST).o src/$(ANA).o $(PYTHIA).o
-	mkdir -p lib; g++  $(ROOTCFLAGS) $(INC) $^ -shared -o $@ 
+	mkdir -p lib; g++  $(ROOTCFLAGS) $(INC) $^ -shared -o $@ ; cp cint/*pcm lib/
 
 $(MAIN).o: $(MAIN).C include/pythiaWrapper.h
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $<

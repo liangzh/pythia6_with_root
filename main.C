@@ -111,7 +111,7 @@ int main(int argc, char** argv){
 		//test if the current event is what we want
 		if(worker.GetStatus()==false) continue; //if analysis not accepted generate another
 
-		if( doSelect == 1 && !selector(event) ) continue;
+//		if( doSelect == 1 && !selector(event) ) continue;
 
 		//fill the tree
 		tree.Fill();

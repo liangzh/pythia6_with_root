@@ -158,6 +158,11 @@ void Event::Build(const Int_t &index){
 	fPt2_hat = pypars.pari[17];
 	fOutParton1 = pypars.msti[20];
 	fOutParton2 = pypars.msti[21];
+	fIniPartonkT1 = pyint1.vint[156];
+	fIniPartonkT2 = pyint1.vint[157];
+	fIniPartonPhi1 = pyint1.vint[360];
+	fIniPartonPhi2 = pyint1.vint[361];
+
 	
 	//add tracks to the current event
 	for(int i=0; i<fNTracks; i++){

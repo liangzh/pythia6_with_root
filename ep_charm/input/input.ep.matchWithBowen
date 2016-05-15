@@ -1,16 +1,16 @@
 2212, 11        ! target beam type, projectile beam type
 250, 20          ! target beam energy, projectile beam energy
-5000,100          ! Number of events 
+10000,100          ! Number of events 
 001				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
 1,1				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
-MSEL=2       ! 4: c-cbar production channel turned on
+MSEL=0       ! 4: c-cbar production channel turned on
 PMAS(4,1)=1.5    ! charm mass to be used when for charm production only
-MSTP(14)=30
+!MSTP(14)=30
 !MSUB(99)=1
 !MSUB(131)=1
 !MSUB(132)=1
-!MSUB(135)=1
-!MSUB(136)=1
+MSUB(135)=1
+MSUB(136)=1
 !MSUB(11)=1
 !MSUB(12)=1
 !MSUB(13)=1
@@ -25,7 +25,8 @@ MSTP(19)=1 ! Hermes MSTP-19=1 different Q2 suppression, default = 4
 MSTP(20)=0 ! Hermes MSTP(20)=0 , default MSTP(20)=3
 MSTP(32)=8 ! definition of Q2, D=8 * changed to 2 according to the pp tuning
 MSTP(38)=4
-MSTP(51)=10050 ! if pdflib is linked than non pythia-pdfs are available,                         like MSTP(51)=4046 
+!MSTP(51)=10050 ! if pdflib is linked than non pythia-pdfs are available, like MSTP(51)=4046, CTEQ6
+MSTP(51)=21100 ! if pdflib is linked than non pythia-pdfs are available, MSTW
 MSTP(52)=2   ! ---> pdflib used MSTP   52=2
 MSTP(53)=3
 MSTP(54)=1
@@ -104,7 +105,7 @@ MSTU(114)=5
 ! ----------- Now all the CKINs for pythia ----------
 CKIN(1)=1.
 CKIN(2)=-1.
-CKIN(3)=0.0
+CKIN(3)=3.0
 CKIN(4)=-1.
 CKIN(5)=1.00
 CKIN(6)=1.00
@@ -138,10 +139,10 @@ CKIN(37)=0.
 CKIN(38)=-1.
 CKIN(39)=4    ! Min for W^2
 CKIN(40)=-1    ! Max for W^2
-CKIN(61)=0.01  ! Min for y
-CKIN(62)=0.95  ! Max for y
-CKIN(65)=1      ! Min for Q^2
-CKIN(66)=20.       ! Max for Q^2
+CKIN(61)=0.80  ! Min for y
+CKIN(62)=0.70  ! Max for y
+CKIN(65)=3.5      ! Min for Q^2
+CKIN(66)=4.5       ! Max for Q^2
 CKIN(67)=0.
 CKIN(68)=-1. 
 CKIN(77)=2    ! Min for W

@@ -15,6 +15,13 @@ class Event;
 class Analysis {
 
 private:
+	//tune test
+	TH1D *h_Prim_dNdEta_1;
+	TH1D *h_Prim_dNdEta_2;
+	TH1D *h_Prim_dNdPt_1;
+	TH1D *h_Prim_dNdPt_2;
+	TH1D *h_Q2_tune;
+
 	//track wise
 	TH1D *h_theta_scattered;
 	TH1D *h_FS_PID_PGF;
@@ -24,28 +31,89 @@ private:
 	TH1D *h_Pion_pt;
 	TH1D *h_Pion_eta;
 	TH1D *h_Pion_z;
+
+	TH2D *h_zVsRapidity;
+	TH2D *h_zVsEta;
+
+	TH1D *h_Kaon_pt_LODIS;
+	TH1D *h_Kaon_eta_LODIS;
+	TH1D *h_Kaon_z_LODIS;
+	TH1D *h_Pion_pt_LODIS;
+	TH1D *h_Pion_eta_LODIS;
+	TH1D *h_Pion_z_LODIS;
+
+	TH1D *h_Kaon_pt_Direct;
+	TH1D *h_Kaon_pt_PGF;
+	TH1D *h_Kaon_pt_QCDC;
+	TH1D *h_Kaon_eta_Direct;
+	TH1D *h_Kaon_z_Direct;
+	TH1D *h_Pion_pt_Direct;
+	TH1D *h_Pion_eta_Direct;
+	TH1D *h_Pion_z_Direct;
+
+	TH1D *h_Kaon_pt_Resolved;
+	TH1D *h_Kaon_eta_Resolved;
+	TH1D *h_Kaon_z_Resolved;
+	TH1D *h_Pion_pt_Resolved;
+	TH1D *h_Pion_eta_Resolved;
+	TH1D *h_Pion_z_Resolved;
+
+	TH1D *h_Kaon_pt_PGFss;
+	TH1D *h_Kaon_eta_PGFss;
+	TH1D *h_Kaon_z_PGFss;
+	TH1D *h_Pion_pt_PGFss;
+	TH1D *h_Pion_eta_PGFss;
+	TH1D *h_Pion_z_PGFss;
+
 	TH1D *h_D0_pt;
 	TH1D *h_D0_eta;
 	TH1D *h_D0_z;
+  TH1D *h_D0_pt_Dstar_feed;
+	TH1D *h_D0_eta_Dstar_feed;
+	TH1D *h_D0_z_Dstar_feed;
+	TH2D *h_D0_decay_pi;
+	TH2D *h_D0_decay_kaon;
 	//pair wise
+	TH1D *h_Pair_Eta;
+	TH2D *h_RapidityCorre;
+	TH2D *h_RapidityCorre_PGF;
+	TH2D *h_RapidityCorre_QCDC;
+	TH1D *h_RapidityPair_PGF;
+	TH1D *h_RapidityPair_QCDC;
+	TH2D *h_kperp_Pperp_all;
+	TH2D *h_dphi_kpOverPp;
+	TH2D *h_kperp_Pperp_all_PGF;
 	TH2D *h_kperp_Pperp;
 	TH2D *h_kperp_Pperp_PGF;
+	TH1D *h_kperp_PGF;
+	TH1D *h_kperp_QCDC;
+	TH1D *h_kperp_q_chan;
+	TH1D *h_kperp_g_chan;
 	TH2D *h_deltaphi_Pperp;
 	TH2D *h_deltaphi_Pperp_PGF;
 	TH1D *h_phi_pair_1;
+	TH1D *h_phi_pair_QCDC_1;
 	TH1D *h_phi_pair_PGF_1;
+	TH1D *h_phi_pair_q_chan_1;
+	TH1D *h_phi_pair_g_chan_1;
 	TH1D *h_deltaphi_1;
 	TH2D *h_deltaphi_Pperp_1;
 	TH1D *h_deltaphi_PGF_1;
 	TH2D *h_deltaphi_Pperp_PGF_1;
 	TH1D *h_phi_pair_2;
+	TH1D *h_phi_pair_QCDC_2;
 	TH1D *h_phi_pair_PGF_2;
+	TH1D *h_phi_pair_q_chan_2;
+	TH1D *h_phi_pair_g_chan_2;
 	TH1D *h_deltaphi_2;
 	TH2D *h_deltaphi_Pperp_2;
 	TH1D *h_deltaphi_PGF_2;
 	TH2D *h_deltaphi_Pperp_PGF_2;
 	TH2D *h_bkgVsPperp;
 	TH1D *h_bkg_process;
+
+	TH2D *h_pt_D0_jet;
+	TH1D *h_dphi_D0_jet;
 		
 	//event wise
 	TH1D *h_QSquared;

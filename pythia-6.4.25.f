@@ -20351,6 +20351,9 @@ C...exponential, or (for photon) predetermined or power law.
           ENDIF
           VINT(156+JT)=PT
           PHI=PARU(2)*PYR(0)
+          !added by liang to include the kt phi information+++
+          VINT(360+JT)=PHI
+          !added by liang to include the kt phi information---
           P(I,1)=PT*COS(PHI)
           P(I,2)=PT*SIN(PHI)
           PMS(JT)=P(I,5)**2+P(I,1)**2+P(I,2)**2

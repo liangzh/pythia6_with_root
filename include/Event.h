@@ -126,6 +126,11 @@ private:
 	Int_t fOutParton2; ///<parton pdg from projectile MSTI(22)
 	Double_t fTargetPartonX; ///<parton x from target PARI(34)
 	Double_t fProjPartonX; ///<parton x from projectile PARI(33)
+	Double_t fIniPartonkT1; ///<initial parton kt from proj VINT(157)
+	Double_t fIniPartonkT2; ///<initial parton kt from target VINT(158)
+	Double_t fIniPartonPhi1; ///<initial parton phi from proj VINT(361)
+	Double_t fIniPartonPhi2; ///<initial parton phi from target VINT(362)
+
 
 	Double_t fPt2_hat; ///<pt2_hat at hard interaction PARI(18)
 
@@ -175,6 +180,14 @@ public:
 	Double_t GetProjPartonX() const { return fProjPartonX; }
 
 	Double_t GetPt2_hat() const { return fPt2_hat; }
+
+	Double_t GetIniPartonkT1() const { return fIniPartonkT1; }
+
+	Double_t GetIniPartonkT2() const { return fIniPartonkT2; }
+
+	Double_t GetIniPartonPhi1() const { return fIniPartonPhi1; }
+
+	Double_t GetIniPartonPhi2() const { return fIniPartonPhi2; }
 
 	ClassDef(Event,1)
 };
