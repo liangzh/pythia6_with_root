@@ -130,6 +130,7 @@ private:
 	Double_t fIniPartonkT2; ///<initial parton kt from target VINT(158)
 	Double_t fIniPartonPhi1; ///<initial parton phi from proj VINT(361)
 	Double_t fIniPartonPhi2; ///<initial parton phi from target VINT(362)
+	Double_t fPhiSpin; ///<spin direction of the target in phi space, stored in PARP(199)
 
 
 	Double_t fPt2_hat; ///<pt2_hat at hard interaction PARI(18)
@@ -188,6 +189,8 @@ public:
 	Double_t GetIniPartonPhi1() const { return fIniPartonPhi1; }
 
 	Double_t GetIniPartonPhi2() const { return fIniPartonPhi2; }
+
+	Double_t GetPhiSpin() const { return fPhiSpin; }
 
 	ClassDef(Event,1)
 };

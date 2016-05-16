@@ -162,6 +162,7 @@ void Event::Build(const Int_t &index){
 	fIniPartonkT2 = pyint1.vint[157];
 	fIniPartonPhi1 = pyint1.vint[360];
 	fIniPartonPhi2 = pyint1.vint[361];
+	fPhiSpin = pypars.parp[198];
 
 	
 	//add tracks to the current event

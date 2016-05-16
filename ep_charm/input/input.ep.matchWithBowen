@@ -36,8 +36,8 @@ MSTP(57)=1
 MSTP(58)=5
 MSTP(59)=1
 MSTP(60)=7
-MSTP(61)=2      ! D=2 initial state parton shower * changed to 1 according to the pp tuning
-MSTP(71)=1      ! D=1 final state parton shower 1/0 on/off
+MSTP(61)=0      ! D=2 initial state parton shower * changed to 1 according to the pp tuning
+MSTP(71)=0      ! D=1 final state parton shower 1/0 on/off
 MSTP(81)=0      ! Multiple interactions off (D=0)
 MSTP(82)=1      ! D=1 Shouldn't matter if MSTP(81)=0
 MSTP(91)=1      ! D=1 gauss distribution of primodial kt in hadron, 0 no kt
@@ -82,7 +82,7 @@ PARJ(15)=0.04     !D=0.0 scalar tuned for D* based on ALEPH
 PARJ(16)=0.12     !D=0.0 axial tuned for D* based on ALEPH
 PARJ(17)=0.2      !D=0.0 tensor tuned for D* based on ALEPH
 PARJ(19)=0.55     !D=1.0 extra baryon suppression D* ALEPH
-PARJ(21)=0.4     ! D=0.4 fragmentaion pt( also used in my dss subroutine )
+PARJ(21)=0.0     ! D=0.4 fragmentaion pt( also used in my dss subroutine )
 PARJ(26)=0.276    !D=0.4 extra eta' suppressiona D* ALEPH
 PARJ(32)=1.0
 PARJ(33)= 0.80   ! energy threshold to stop string breaking process, D=0.8
@@ -105,7 +105,7 @@ MSTU(114)=5
 ! ----------- Now all the CKINs for pythia ----------
 CKIN(1)=1.
 CKIN(2)=-1.
-CKIN(3)=3.0
+CKIN(3)=3.5
 CKIN(4)=-1.
 CKIN(5)=1.00
 CKIN(6)=1.00

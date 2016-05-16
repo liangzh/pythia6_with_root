@@ -20353,6 +20353,9 @@ C...exponential, or (for photon) predetermined or power law.
           PHI=PARU(2)*PYR(0)
           !added by liang to include the kt phi information+++
           VINT(360+JT)=PHI
+          IF(JT.eq.2) THEN
+             PARP(199)=phiSpin(PT, PHI, VINT(42), MSTI(16))
+          ENDIF
           !added by liang to include the kt phi information---
           P(I,1)=PT*COS(PHI)
           P(I,2)=PT*SIN(PHI)
@@ -20926,7 +20929,36 @@ C...Boost incoming hadron to hadronic CM frame to determine rotations.
  
       RETURN
       END
+
+C*********************************************************************
  
+C...phiSpin
+C...Calculate the pinSpin with the Sivers azimuthal modulation
+C...Added by liang to implement the Sivers effect
+ 
+      FUNCTION phiSpin( pt, phik, x, iflav )
+
+C...Double precision and integer declarations.
+      IMPLICIT DOUBLE PRECISION(A-H, O-Z)
+      IMPLICIT INTEGER(I-N)
+ 
+      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      COMMON/PYINT1/MINT(400),VINT(400)
+
+100   continue
+      phiSiv = PYR(0)*PARU(2)
+      fNq = 1.0 !x dependent term
+      fhk = 1.0 !kt dependent term
+      fpMax = 1.0+fNq*fhk
+      fp = 1.0+fNq*fhk*sin(phiSiv)
+      if(PYR(0).gt.(fp/fpMax)) goto 100
+      phiSpin = phik -phiSiv
+      !transfer to the 0-2pi range
+      if(phiSpin.lt.0D0) phiSpin=phiSpin+PARU(2)
+
+      return 
+      END
+
 C*********************************************************************
  
 C...PYMIGN
