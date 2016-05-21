@@ -20349,13 +20349,10 @@ C...exponential, or (for photon) predetermined or power law.
           ELSE
             PT=0D0
           ENDIF
+          !added by liang to include the kt phi information+++
           VINT(156+JT)=PT
           PHI=PARU(2)*PYR(0)
-          !added by liang to include the kt phi information+++
           VINT(360+JT)=PHI
-          IF(JT.eq.2) THEN
-             PARP(199)=phiSpin(PT, PHI, VINT(42), MSTI(16))
-          ENDIF
           !added by liang to include the kt phi information---
           P(I,1)=PT*COS(PHI)
           P(I,2)=PT*SIN(PHI)
@@ -20931,7 +20928,23 @@ C...Boost incoming hadron to hadronic CM frame to determine rotations.
       END
 
 C*********************************************************************
+C...subroutine to fill the phiSpin
+      SUBROUTINE setPhiSpin
+C...Double precision and integer declarations.
+      IMPLICIT DOUBLE PRECISION(A-H, O-Z)
+      IMPLICIT INTEGER(I-N)
  
+      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      COMMON/PYINT1/MINT(400),VINT(400)
+      COMMON/PYPARS/MSTP(200),PARP(200),MSTI(200),PARI(200)
+
+c      PRINT*,' pT:',VINT(158),' PHI:',VINT(362),' ifla:',MSTI(16)
+      PARP(199)=phiSpin(VINT(158), VINT(362), PARI(34), MSTI(16))
+      
+      RETURN
+      END
+
+C*********************************************************************
 C...phiSpin
 C...Calculate the pinSpin with the Sivers azimuthal modulation
 C...Added by liang to implement the Sivers effect
@@ -20941,22 +20954,39 @@ C...Added by liang to implement the Sivers effect
 C...Double precision and integer declarations.
       IMPLICIT DOUBLE PRECISION(A-H, O-Z)
       IMPLICIT INTEGER(I-N)
- 
+
       COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
-      COMMON/PYINT1/MINT(400),VINT(400)
 
 100   continue
       phiSiv = PYR(0)*PARU(2)
-      fNq = 1.0 !x dependent term
-      fhk = 1.0 !kt dependent term
-      fpMax = 1.0+fNq*fhk
-      fp = 1.0+fNq*fhk*sin(phiSiv)
+      fNahk = 0.0
+      if(iflav.eq.21) then
+         fNahk = -2.0*pt*0.8/(pt*pt+0.8*0.8)
+      elseif(iflav.eq.2) then
+         fNahk = funNahk( x, pt, 0.4d0, 0.35d0, 2.6d0, 0.19d0 )
+      elseif(iflav.eq.1) then
+         fNahk = funNahk( x, pt, -0.94d0, 0.44d0, 0.9d0, 0.19d0 )
+      endif
+c      print*,fNahk
+      fpMax = 1.0+ABS(fNahk)
+      fp = 1.0+fNahk*sin(phiSiv)
       if(PYR(0).gt.(fp/fpMax)) goto 100
-      phiSpin = phik -phiSiv
+      phiSpin = phik - phiSiv
       !transfer to the 0-2pi range
       if(phiSpin.lt.0D0) phiSpin=phiSpin+PARU(2)
 
       return 
+      END
+
+C*********************************************************************
+      FUNCTION funNahk( x, kt, fN, a, b, M2 )
+      IMPLICIT DOUBLE PRECISION(A-Z)
+
+      fNq = fN*(x**a)*((1.-x)**b)*((a+b)**(a+b))/((a**a)*(b**b))
+      fhk = sqrt(2.*2.7183)*kt/sqrt(M2)*EXP(-kt*kt/M2)
+      funNahk = fNq*fhk
+
+      return
       END
 
 C*********************************************************************
@@ -24750,8 +24780,11 @@ C...exponential, or (for photon) predetermined or power law.
       ELSE
         PT=0D0
       ENDIF
+      !added by liang to include the kt phi information+++
       VINT(156+ISIDE)=PT
       PHI=PARU(2)*PYR(0)
+      VINT(360+ISIDE)=PHI
+      !added by liang to include the kt phi information---
       P(IPU3,1)=PT*COS(PHI)
       P(IPU3,2)=PT*SIN(PHI)
       P(IPU3,4)=SQRT(P(IPU3,5)**2+PT**2+P(IPU3,3)**2)

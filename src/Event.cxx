@@ -163,7 +163,8 @@ void Event::Build(const Int_t &index){
 	fIniPartonPhi1 = pyint1.vint[360];
 	fIniPartonPhi2 = pyint1.vint[361];
 	fPhiSpin = pypars.parp[198];
-
+//	std::cout<<"event id:"<<index<<" proc:"<<fProcess<<" kt:"<<fIniPartonkT2
+//	 <<" x:"<<fTargetPartonX<<" ifla:"<<fTargetParton<<std::endl;	
 	
 	//add tracks to the current event
 	for(int i=0; i<fNTracks; i++){

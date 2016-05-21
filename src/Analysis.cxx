@@ -402,7 +402,7 @@ void Analysis::FillHist(const Event *event){
 			if(z<0.1) continue; //all primary charge
 			h_zVsEta->Fill(particle->GetEta(), z);
 
-			if(z<0.2||z>0.4) continue; //match with Bowen comparison
+//			if(z<0.2||z>0.4) continue; //match with Bowen comparison
 
 			if(fabs(particle->GetEta())>4.5) continue; //all primary charge
 			
@@ -496,7 +496,7 @@ void Analysis::FillHist(const Event *event){
 				double Pperp = (vTrig-vhadron).Pt()/2.;
 
 				//test with Bowen's calculation
-				if(Pperp<4.) continue;
+//				if(Pperp<4.) continue;
 
 				if(delta_phi < -3.14159/2.) delta_phi+=2*3.14159;
 				if(delta_phi > 3*3.14159/2.) delta_phi-=2*3.14159;

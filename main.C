@@ -91,6 +91,7 @@ int main(int argc, char** argv){
 		iLoopLast = iLoop;
 		//generate 1 event
 		call_pyevnt();
+		call_setphispin();
 		//if bad event skip this one
 		if(pypars.msti[60]==1) continue;
 

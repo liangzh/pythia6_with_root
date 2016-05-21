@@ -130,7 +130,7 @@ extern "C" {
 #define upinit upinit_
 #define upevnt upevnt_
     extern "C" {
-				int pycomp(int*);
+	  int pycomp(int*);
         void pyhepc(int*);
         void pyinit(const char*,const char*,const char*,double*,int,int,int);
         void pylist(int*);
@@ -167,6 +167,14 @@ extern "C" {
 	void pdfsta();
 }
 inline void call_pdfsta(){ pdfsta(); }
+
+//routines set spin phi angle
+#define setphispin setphispin_
+extern "C" {
+   void setphispin(void);
+}
+inline void call_setphispin(){ setphispin(); }
+
 
 //--------------------------------------------------------------------------
 // PYTHIA block data
