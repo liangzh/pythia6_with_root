@@ -15,7 +15,6 @@
 #include <TClonesArray.h>
 #include <TRefArray.h>
 #include <TRef.h>
-#include <TH1.h>
 #include <TBits.h>
 #include <TMath.h>
 #include <Rtypes.h> //for class Def
@@ -78,9 +77,9 @@ public:
 	Float_t	   GetEta() const { return fEta; }
 	Float_t	   GetRapidity() const { return fRapidity; }
 	Float_t       GetMass() const { return fMass; }
-	Float_t       GetVx() const { return fPx; }
-	Float_t       GetVy() const { return fPy; }
-	Float_t       GetVz() const { return fPz; }
+	Float_t       GetVx() const { return fVx; }
+	Float_t       GetVy() const { return fVy; }
+	Float_t       GetVz() const { return fVz; }
 
 	Int_t		GetIndex() const { return fIndex; }
 	Int_t		GetParent() const { return fOrig; }

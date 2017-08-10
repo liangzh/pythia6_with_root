@@ -31,6 +31,10 @@ private:
 	TH1D *h_Pion_pt;
 	TH1D *h_Pion_eta;
 	TH1D *h_Pion_z;
+	TH1D *h_charge_pt;
+	TH1D *h_charge_eta;
+	TH1D *h_charge_z;
+
 
 	TH2D *h_zVsRapidity;
 	TH2D *h_zVsEta;
@@ -41,6 +45,10 @@ private:
 	TH1D *h_Pion_pt_LODIS;
 	TH1D *h_Pion_eta_LODIS;
 	TH1D *h_Pion_z_LODIS;
+	TH1D *h_charge_pt_LODIS;
+	TH1D *h_charge_eta_LODIS;
+	TH1D *h_charge_z_LODIS;
+
 
 	TH1D *h_Kaon_pt_Direct;
 	TH1D *h_Kaon_pt_PGF;
@@ -50,6 +58,12 @@ private:
 	TH1D *h_Pion_pt_Direct;
 	TH1D *h_Pion_eta_Direct;
 	TH1D *h_Pion_z_Direct;
+	TH1D *h_charge_pt_Direct;
+	TH1D *h_charge_pt_PGF;
+	TH1D *h_charge_pt_QCDC;
+	TH1D *h_charge_eta_Direct;
+	TH1D *h_charge_z_Direct;
+
 
 	TH1D *h_Kaon_pt_Resolved;
 	TH1D *h_Kaon_eta_Resolved;
@@ -57,6 +71,10 @@ private:
 	TH1D *h_Pion_pt_Resolved;
 	TH1D *h_Pion_eta_Resolved;
 	TH1D *h_Pion_z_Resolved;
+	TH1D *h_charge_pt_Resolved;
+	TH1D *h_charge_eta_Resolved;
+	TH1D *h_charge_z_Resolved;
+
 
 	TH1D *h_Kaon_pt_PGFss;
 	TH1D *h_Kaon_eta_PGFss;
@@ -73,9 +91,11 @@ private:
 	TH1D *h_D0_z_Dstar_feed;
 	TH2D *h_D0_decay_pi;
 	TH2D *h_D0_decay_kaon;
+	TH2D *h_D0_pipt_kaonpt;
 	//pair wise
 	TH1D *h_Pair_Eta;
 	TH2D *h_RapidityCorre;
+	TH2D *h_EtaCorre;
 	TH2D *h_RapidityCorre_PGF;
 	TH2D *h_RapidityCorre_QCDC;
 	TH1D *h_RapidityPair_PGF;
@@ -116,9 +136,11 @@ private:
 	TH1D *h_dphi_D0_jet;
 		
 	//event wise
+	TH2D *h_oute_pVsEta;
 	TH1D *h_QSquared;
 	TH1D *h_xBj;
 	TH1D *h_W2;
+	TH1D *h_W;
 	TH1D *h_y;
 	TH2D *h_Q2VsxBj;
 	TH1D *h_alpha;

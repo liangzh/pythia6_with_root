@@ -31,7 +31,8 @@ ROOTCOPT = -pthread -m64 -std=c++11 -fPIC -g
 #LHAPDF=/afs/rhic.bnl.gov/eic/PACKAGES/LHAPDF-5.8.6/lib
 #LHAPDF=/direct/eic+data/zhengl/LHAPDF-5.9.1/
 LHAPDF=/home/adminuser/lib/LHAPDF-5.9/lib/
-LIB = -L$(LHAPDF)/ -lLHAPDF
+FASTJET=/home/adminuser/lib/fastjet3/
+LIB = -L$(LHAPDF)/ -lLHAPDF -L$(FASTJET)/lib/ -lfastjet
 
 ROOTGLIBS = $(shell root-config --glibs)
 
@@ -40,6 +41,7 @@ ROOTGLIBS = $(shell root-config --glibs)
 #the later usage will cause some trouble when dealing the load of
 #shared library
 INC = -I$(TOP)/include/
+FASTJETINC = -I$(FASTJET)/include/
 ROOTINC = -I$(shell root-config --incdir) 
 
 ############################# linker - options #########################
@@ -73,7 +75,7 @@ src/$(HIST).o: src/$(HIST).cxx include/$(HIST).h
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $<  -o src/$(HIST).o
 
 src/$(ANA).o: src/$(ANA).cxx include/$(ANA).h
-	$(GCC) -c $(ROOTCFLAGS) $(INC) $<  -o src/$(ANA).o
+	$(GCC) -c $(ROOTCFLAGS) $(INC) $(FASTJETINC) $<  -o src/$(ANA).o
 
 
 #make dictionary for the Event class
@@ -85,10 +87,10 @@ cint/MyDict.cxx: include/HistMaker.h include/Analysis.h include/pythiaWrapper.h 
 
 
 cint/MyDict.o: cint/MyDict.cxx
-	$(GCC) -c $(ROOTCFLAGS) $(INC) $< -o cint/MyDict.o
+	$(GCC) -c $(ROOTCFLAGS) $(INC) $< -o cint/MyDict.o $(LDOPT)
 	 
 lib/libEvent.so: cint/MyDict.o src/$(EVENT).o src/$(HIST).o src/$(ANA).o $(PYTHIA).o
-	mkdir -p lib; g++  $(ROOTCFLAGS) $(INC) $^ -shared -o $@ ; cp cint/*pcm lib/
+	mkdir -p lib; g++  $(ROOTCFLAGS) $(INC) $^ -shared -o $@  $(LDOPT); cp cint/*pcm lib/
 
 $(MAIN).o: $(MAIN).C include/pythiaWrapper.h
 	$(GCC) -c $(ROOTCFLAGS) $(INC) $<

@@ -1,9 +1,9 @@
 2212, 2212        ! target beam type, projectile beam type
-500, 500          ! target beam energy, projectile beam energy
-10,10          ! Number of events 
-201				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
-197,79				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
-MSEL=1
+200, 200          ! target beam energy, projectile beam energy
+1000,10          ! Number of events 
+1				! order for EPS09 order=x*100+y;x=1/2,LO/NLO;y=1-31 error sets
+1,1				! A, Z parameter used in nPDF,A=1,z=1 for p; A=197,Z=79 for Au
+MSEL=4
 !MSUB(91)=0      ! Elastic
 !MSUB(92)=1      ! Singly diffractive (XB)
 !MSUB(93)=1      ! Singly diffractive (AX)
@@ -13,22 +13,23 @@ MSEL=1
 !MSUB(1)=1 
 !MSUB(2)=1 
 !MSUB(10)=1 
-!MSUB(11)=1 
-!MSUB(12)=1 
-!MSUB(13)=1 
-!MSUB(28)=1 
-!MSUB(53)=1 
-!MSUB(68)=1 
-!MSUB(82)=1 
-!MSUB(14)=1 
-!MSUB(18)=1 
-!MSUB(29)=1 
+!MSUB(11)=1  !ff->ff
+!MSUB(12)=1  !ffb->ffb
+!MSUB(13)=1  !ffb->gg
+!MSUB(28)=1  !fg->fg
+!MSUB(53)=1  !gg->ffb
+!MSUB(68)=1  !gg->gg
+!MSUB(81)=1  !ffb->QQb
+!MSUB(82)=1  !gg->QQb
+!MSUB(14)=1 !ffb->g gama
+!MSUB(18)=1 !ffb->gama gama
+!MSUB(29)=1 !fg->f gama
 !MSUB(114)=1 
 !MSUB(115)=1 
 ! mstp(5)=100   ! this selects tune A
 ! MSTP(43) =            3 !
-MSTP(51) =        10550 ! CTEQ 66 PDF set for proton 
-MSTP(52) =            2 ! PDF set internal (=1) or pdflib (=2)        
+MSTP(51) =        14 ! CTEQ 66 PDF (10050) set for proton (Duke Set1=14)
+MSTP(52) =            1 ! PDF set internal (=1) or pdflib (=2)        
 PARP(62) =       1.0000 ! ISR IR cutoff                               
 PARP(64) =       1.0000 ! ISR renormalization scale prefactor          
 PARP(67) =       4.0000 ! ISR Q2max factor                             
@@ -56,7 +57,7 @@ PARJ(55) =      -0.0050 ! HAD bottom parameter
 !PARJ(46) =       1.0000 ! HAD Lund(=0)-Bowler(=1) rQ (rc)
 !PARJ(47) =       1.0000 ! HAD Lund(=0)-Bowler(=1) rQ (rc)
 ! ----------- Now all the CKINs for pythia ----------
-CKIN(3)=5.
+CKIN(3)=2.
 ! ----------- Set up the random number seed ---------
 !MRPY(1)=9  ! random number seed for pyr
 !MRPY(2)=0  ! flag to reset the random number seed

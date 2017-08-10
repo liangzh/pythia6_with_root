@@ -113,11 +113,11 @@ C     beam2 is defined in negative z and as beam
 
       !switch off all the decay channel for D0 other than the D0->pi+K
       !used only for the DDbar correlation study!!!!!!
-!      do I = MDCY(125,2) , MDCY(125,2) + MDCY(125, 3) - 1
-!         if (I.ne.763) then
-!            MDME(I,1)=0
-!         endif
-!      enddo
+c      do I = MDCY(125,2) , MDCY(125,2) + MDCY(125, 3) - 1
+c         if (I.ne.763) then
+c            MDME(I,1)=0
+c         endif
+c      enddo
  
       if ((ttype.eq.ptype).and.(ttype.eq.2212)) then
          call pyinit ('3MOM','p+','p+',WIN)

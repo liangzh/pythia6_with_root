@@ -1,18 +1,11 @@
 #include "math.h"
 
+#include "Analysis.h"
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
+#include "pythiaWrapper.h"
 #include "Event.h"
-#include "Analysis.h"
-
-#include <vector>
-
-#include "fastjet/ClusterSequence.hh"
-#include "fastjet/PseudoJet.hh"
-
-using namespace fastjet;
-using namespace std;
 
 ClassImp(Analysis)
 
@@ -70,21 +63,18 @@ TH2D *getLinXLogYBin(TString histname, TString histaxis,
 		return htemp;
 }
 
-double findLeadPtFraction(PseudoJet inJet){
-	int NInJetParticle = (inJet.constituents()).size();
-	double leadPt=-1;
-	for(int i_p=0; i_p<NInJetParticle; i_p++){
-		if(inJet.constituents()[i_p].pt()>leadPt){
-			leadPt=inJet.constituents()[i_p].pt();
-		}
-	}
-	return leadPt/inJet.pt();
-}
-
-
 
 //=================Initializer========================
 Analysis::Analysis(){
+
+	//switch off D0 decay but only pi/K channel
+	for(int i_chan=pydat3.mdcy[2][124]; i_chan<pydat3.mdcy[2][124]+pydat3.mdcy[3][124]-1;
+		i_chan++) {
+	   if(i_chan!=762)
+		pydat3.mdme[0][i_chan]=0;
+	}
+
+	//Now book hist
 	TH1::SetDefaultSumw2();
 	//track wise
 	h_theta_scattered = new TH1D("h_theta_scattered","theta of scattered electron;#theta;counts",100, 0, 3.14159);
@@ -106,6 +96,10 @@ Analysis::Analysis(){
 	h_Pion_eta = new TH1D("h_Pion_eta", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Pion_z = new TH1D("h_Pion_z", "z;z;d#sigma/dz [nb]", 10, 0, 1);
 	h_Pion_pt = getLogXBin("h_Pion_pt", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_eta = new TH1D("h_charge_eta", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
+	h_charge_z = new TH1D("h_charge_z", "z;z;d#sigma/dz [nb]", 10, 0, 1);
+	h_charge_pt = getLogXBin("h_charge_pt", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	
 	//LODIS
 	h_Kaon_eta_LODIS = new TH1D("h_Kaon_eta_LODIS", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Kaon_z_LODIS = new TH1D("h_Kaon_z_LODIS", "z;z;d#sigma/dz [nb]", 10, 0, 1);
@@ -113,6 +107,9 @@ Analysis::Analysis(){
 	h_Pion_eta_LODIS = new TH1D("h_Pion_eta_LODIS", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Pion_z_LODIS = new TH1D("h_Pion_z_LODIS", "z;z;d#sigma/dz [nb]", 10, 0, 1);
 	h_Pion_pt_LODIS = getLogXBin("h_Pion_pt_LODIS", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_pt_LODIS = getLogXBin("h_charge_pt_LODIS", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_eta_LODIS = new TH1D("h_charge_eta_LODIS", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
+	h_charge_z_LODIS = new TH1D("h_charge_z_LODIS", "z;z;d#sigma/dz [nb]", 10, 0, 1);
 	//Direct
 	h_Kaon_eta_Direct = new TH1D("h_Kaon_eta_Direct", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Kaon_z_Direct = new TH1D("h_Kaon_z_Direct", "z;z;d#sigma/dz [nb]", 10, 0, 1);
@@ -122,6 +119,13 @@ Analysis::Analysis(){
 	h_Pion_eta_Direct = new TH1D("h_Pion_eta_Direct", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Pion_z_Direct = new TH1D("h_Pion_z_Direct", "z;z;d#sigma/dz [nb]", 10, 0, 1);
 	h_Pion_pt_Direct = getLogXBin("h_Pion_pt_Direct", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_eta_Direct = new TH1D("h_charge_eta_Direct", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
+	h_charge_z_Direct = new TH1D("h_charge_z_Direct", "z;z;d#sigma/dz [nb]", 10, 0, 1);
+	h_charge_pt_Direct = getLogXBin("h_charge_pt_Direct", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	
+	h_charge_pt_PGF = getLogXBin("h_charge_pt_PGF", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_pt_QCDC = getLogXBin("h_charge_pt_QCDC", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	
 	//Resolved
 	h_Kaon_eta_Resolved = new TH1D("h_Kaon_eta_Resolved", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Kaon_z_Resolved = new TH1D("h_Kaon_z_Resolved", "z;z;d#sigma/dz [nb]", 10, 0, 1);
@@ -129,6 +133,10 @@ Analysis::Analysis(){
 	h_Pion_eta_Resolved = new TH1D("h_Pion_eta_Resolved", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Pion_z_Resolved = new TH1D("h_Pion_z_Resolved", "z;z;d#sigma/dz [nb]", 10, 0, 1);
 	h_Pion_pt_Resolved = getLogXBin("h_Pion_pt_Resolved", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+	h_charge_eta_Resolved = new TH1D("h_charge_eta_Resolved", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
+	h_charge_z_Resolved = new TH1D("h_charge_z_Resolved", "z;z;d#sigma/dz [nb]", 10, 0, 1);
+	h_charge_pt_Resolved = getLogXBin("h_charge_pt_Resolved", "pt;pt;d#sigma/dpt [nb/GeV]", 40, 0.1, 20);
+		
 	//PGF ssbar
 	h_Kaon_eta_PGFss = new TH1D("h_Kaon_eta_PGFss", "#eta;#eta;d#sigma/d#eta [nb]", 50, -4.5, 4.5);
 	h_Kaon_z_PGFss = new TH1D("h_Kaon_z_PGFss", "z;z;d#sigma/dz [nb]", 10, 0, 1);
@@ -149,6 +157,7 @@ Analysis::Analysis(){
 			50, -5, 5, 50, 0.1, 100);
 	h_D0_decay_kaon = getLinXLogYBin("h_D0_decay_kaon", "p vs #eta for pi from D0; #eta; p [GeV]",
 			50, -5, 5, 50, 0.1, 100);
+	h_D0_pipt_kaonpt = new TH2D("h_D0_pipt_kaonpt", ";p_{T}^{#pi};p_{T}^{K}", 100, 0, 5, 100, 0, 5);
 
 
 	//pair wise
@@ -195,9 +204,11 @@ Analysis::Analysis(){
 	h_dphi_D0_jet = new TH1D("h_dphi_D0_jet", ";#phi_{jet}-#phi_{D0}", 50, -3.142, 3.142);
 
 	//event wise
+	h_oute_pVsEta = new TH2D("h_oute_pVsEta", ";#eta_{e};p_{e}", 50, -5, 5, 50, 0, 25);
 	h_QSquared = new TH1D("h_QSquared", "Q^{2};log_{10}(Q^{2});counts", 50, 0, 4);
 	h_xBj = new TH1D("h_xBj", "x_{Bj};log_{10}(x_{Bj});counts", 50, -5, 0);
 	h_W2 = new TH1D("h_W2", "W^{2};log_{10}(W^{2});counts", 100, 0, 6);
+	h_W = new TH1D("h_W", ";W;counts", 100, 0, 2E2);
 	h_y = new TH1D("h_y", "y;log_{10}(y);counts", 50, -5, 0);
 	h_Q2VsxBj = new TH2D("h_Q2VsxBj", "log_{10}(Q^{2}) vs log_{10}(x_{Bj});log_{10}(x_{Bj});log_{10}(Q^{2})", 50, -5, 0, 50, 0, 4);
 //	h_Q2VsxBj_Pair = new TH2D("h_Q2VsxBj_Pair", "log_{10}(Q^{2}) vs log_{10}(x_{Bj});log_{10}(x_{Bj});log_{10}(Q^{2})", 50, -5, 0, 50, 0, 4);
@@ -237,6 +248,7 @@ void Analysis::FillHist(const Event *event){
 	h_xBj->Fill(log10(xBj));
 	h_QSquared->Fill(log10(Q2));
 	h_W2->Fill(log10(y*sqs*sqs));
+	h_W->Fill(sqrt(y*sqs*sqs));
 	h_y->Fill(log10(y));
 	h_Q2VsxBj->Fill(log10(xBj), log10(Q2));
 
@@ -249,8 +261,6 @@ void Analysis::FillHist(const Event *event){
 	TLorentzVector v_pbeam;
 	TLorentzVector vPh, vPhTrue;
 
-	//vector to store particles used in jet reconstruction
-	vector<PseudoJet> hadronList;
 	double Ee_beam = -1;
 	//fill e/p beam and out e, exchanged photon info
 	for(int itrack=0; itrack<event->GetNTrack(); itrack++){
@@ -269,6 +279,8 @@ void Analysis::FillHist(const Event *event){
 		}
 	}//for
 
+	h_oute_pVsEta->Fill(v_e_out.Eta(), v_e_out.P());
+
 	vPh = v_ebeam-v_e_out;
 	vPhTrue = vPh;
 
@@ -276,7 +288,7 @@ void Analysis::FillHist(const Event *event){
 	TVector3 b=-(v_pbeam.Vect()+vPhTrue.Vect())*(1./(v_pbeam.E()+vPhTrue.E()));
 	vPh.Boost(b);
 
-	TLorentzVector vhadron, vTrig, vTotal, vAssc;
+	TLorentzVector vhadron, vTrig, vTotal;
 	int trigId = 0;
 	int trigIndex = -1;
 
@@ -332,10 +344,10 @@ void Analysis::FillHist(const Event *event){
 				h_Kaon_pt->Fill(vhadron.Pt());
 				h_Kaon_z->Fill(z);
 			}
-			else if(particle->GetKS()==1&&abs(particle->GetPid())==211){
-				h_Pion_eta->Fill(particle->GetEta());
-				h_Pion_pt->Fill(vhadron.Pt());
-				h_Pion_z->Fill(z);
+			if(particle->GetKS()==1&&(abs(particle->GetPid())==211||abs(particle->GetPid())==321||abs(particle->GetPid())==2212)){
+				h_charge_eta->Fill(particle->GetEta());
+				h_charge_pt->Fill(vhadron.Pt());
+				h_charge_z->Fill(z);
 			}
 
 			if(event->GetProcess()==99){
@@ -344,27 +356,34 @@ void Analysis::FillHist(const Event *event){
 					h_Kaon_pt_LODIS->Fill(vhadron.Pt());
 					h_Kaon_z_LODIS->Fill(z);
 				}
-				else if(abs(particle->GetPid())==211){
-					h_Pion_eta_LODIS->Fill(particle->GetEta());
-					h_Pion_pt_LODIS->Fill(vhadron.Pt());
-					h_Pion_z_LODIS->Fill(z);
+				if(abs(particle->GetPid())==211||abs(particle->GetPid())==321||abs(particle->GetPid())==2212){
+					h_charge_eta_LODIS->Fill(particle->GetEta());
+					h_charge_pt_LODIS->Fill(vhadron.Pt());
+					h_charge_z_LODIS->Fill(z);
 				}
 			}
 			else if(event->GetProcess()>130){
 				if(abs(particle->GetPid())==321){
 					h_Kaon_eta_Direct->Fill(particle->GetEta());
 					h_Kaon_pt_Direct->Fill(vhadron.Pt());
+					h_Kaon_z_Direct->Fill(z);
+
 					if(event->GetProcess()>132)
 						h_Kaon_pt_PGF->Fill(vhadron.Pt());
 					else
 						h_Kaon_pt_QCDC->Fill(vhadron.Pt());
 
-					h_Kaon_z_Direct->Fill(z);
 				}
-				else if(abs(particle->GetPid())==211){
-					h_Pion_eta_Direct->Fill(particle->GetEta());
-					h_Pion_pt_Direct->Fill(vhadron.Pt());
-					h_Pion_z_Direct->Fill(z);
+				if(abs(particle->GetPid())==211||abs(particle->GetPid())==321||abs(particle->GetPid())==2212){
+					h_charge_eta_Direct->Fill(particle->GetEta());
+					h_charge_pt_Direct->Fill(vhadron.Pt());
+					h_charge_z_Direct->Fill(z);
+
+					if(event->GetProcess()>132)
+						h_charge_pt_PGF->Fill(vhadron.Pt());
+					else
+						h_charge_pt_QCDC->Fill(vhadron.Pt());
+
 				}
 			}
 			else if(event->GetProcess()<90){
@@ -373,10 +392,10 @@ void Analysis::FillHist(const Event *event){
 					h_Kaon_pt_Resolved->Fill(vhadron.Pt());
 					h_Kaon_z_Resolved->Fill(z);
 				}
-				else if(abs(particle->GetPid())==211){
-					h_Pion_eta_Resolved->Fill(particle->GetEta());
-					h_Pion_pt_Resolved->Fill(vhadron.Pt());
-					h_Pion_z_Resolved->Fill(z);
+				if(abs(particle->GetPid())==211||abs(particle->GetPid())==321||abs(particle->GetPid())==2212){
+					h_charge_eta_Resolved->Fill(particle->GetEta());
+					h_charge_pt_Resolved->Fill(vhadron.Pt());
+					h_charge_z_Resolved->Fill(z);
 				}
 			}
 
@@ -411,131 +430,223 @@ void Analysis::FillHist(const Event *event){
 
 			}
 
-			//select jet candidates
-			if(particle->GetKS()!=1||fabs(particle->GetEta())>4.5||particle->GetPt()<0.25) continue;
-			if(particle->GetPid()==11&&particle->GetParent()==3) continue;
-			if(particle->GetPid()!=22&&abs(particle->GetPid())!=211&&abs(particle->GetPid())!=321&&
-					abs(particle->GetPid())!=2212&&abs(particle->GetPid())!=2112) continue;
-			PseudoJet had_temp(vhadron.Px(), vhadron.Py(), vhadron.Pz(), vhadron.E());
-			had_temp.set_user_index(itrack);
-			hadronList.push_back(had_temp);
+			//z cut for the particles
+//			if(z>0.75||z<0.25) continue;
+//			if(z<0.25) continue; //used for D0 pair
+//			if(z<0.2) continue; //used for D0 pair
+//			if(fabs(particle->GetEta())>1) continue; //used for charged K pair
+//			if(z<0.1||particle->GetKS()!=1||abs(particle->GetPid())!=selectPid||vhadron.Pt()<1.7) continue; //used for charged K pair
+//			if(particle->GetKS()!=1||vhadron.Pt()<1.7) continue; //all primary charge
 
+//			int Pidtemp = particle->GetPid(); //all primary charge
+//			if(abs(Pidtemp)!=211&&abs(Pidtemp)!=321&&abs(Pidtemp)!=2212) continue; //all primary charge
+			if(abs(particle->GetPid())!=421) continue;
+			h_zVsRapidity->Fill(vhadron.Rapidity(), z);
+			if(z<0.1) continue; //all primary charge, D0
+			h_zVsEta->Fill(particle->GetEta(), z);
+
+//			if(z<0.2||z>0.4) continue; //match with Bowen comparison
+
+//			if(fabs(particle->GetEta())>4.5) continue; //all primary charge
+			
+			//pt cut for the D0 particles
+//			if(vhadron.Pt()<0.5||abs(particle->GetPid())!=selectPid) continue;
+
+			//make sure only 2 decay products for D0
+			if(particle->GetDaughter2()<=particle->GetDaughter1()||particle->GetDaughter2()>particle->GetDaughter1()+1) continue;
+
+			//===========decay products cut==================================//
+			int id1 = event->GetTrack(particle->GetDaughter1()-1)->GetPid();
+			int id2 = event->GetTrack(particle->GetDaughter2()-1)->GetPid();
+			double eta1 = event->GetTrack(particle->GetDaughter1()-1)->GetEta();
+			double eta2 = event->GetTrack(particle->GetDaughter2()-1)->GetEta();
+			double mom1 = event->GetTrack(particle->GetDaughter1()-1)->GetP();
+			double mom2 = event->GetTrack(particle->GetDaughter2()-1)->GetP();
+			double pt1 = event->GetTrack(particle->GetDaughter1()-1)->GetPt();
+			double pt2 = event->GetTrack(particle->GetDaughter2()-1)->GetPt();
+
+			if(abs(id1)!=211&&abs(id1)!=321)
+				continue;
+			else if(abs(id1)==211&&abs(id2)!=321)
+				continue;
+			else if(abs(id1)==321&&abs(id2)!=211)
+				continue;
+
+			bool kaon_mom_cut=false;
+
+			//1st pion, 2nd kaon
+			if(abs(id1)==211){
+				h_D0_decay_pi->Fill(eta1, mom1);
+				h_D0_decay_kaon->Fill(eta2, mom2);
+				h_D0_pipt_kaonpt->Fill(pt1, pt2);
+				//if(mom2<0.2) kaon_mom_cut=true;
+				if(pt1<0.2||pt2<0.2) kaon_mom_cut=true; //do mom cut for both pi and k
+			}
+			//1st kaon, 2nd pion
+			else{
+				h_D0_decay_pi->Fill(eta2, mom2);
+				h_D0_decay_kaon->Fill(eta1, mom1);
+				h_D0_pipt_kaonpt->Fill(pt2, pt1);
+				//if(mom1<0.2) kaon_mom_cut=true;
+				if(pt1<0.2||pt2<0.2) kaon_mom_cut=true; //do mom cut for both pi and k
+			}
+
+			//do kaon decay product cut
+			if(kaon_mom_cut) continue;
+
+			if(fabs(eta1)>3.5||fabs(eta2)>3.5) continue;
+			//===========decay products cut end===============================//
+
+
+//			std::cout<<"id1:"<<id1<<" id2:"<<id2<<std::endl;
+
+			foundIndex[foundNum]=itrack;
+			foundNum++;
+			//look for trig
+/*			if( trigId==0 && vhadron.Pt()>1 ){
+				trigId = particle->GetPid();
+				vTrig=vhadron;
+				trigIndex = itrack;
+			}//if trig
+*/
 		}//if accepted
 	}//for
 
-//	if(hadronList.size()<5) {
-//		this->status = false;
-//		return;
-//	}
+	//make pairs according to the particle list accepted above
+	for(int itrig=0; itrig<foundNum-1; itrig++){
+		ParticleMC *particle1 = event->GetTrack(foundIndex[itrig]);
+		vTrig.SetPxPyPzE(particle1->GetPx(), particle1->GetPy(), particle1->GetPz(), particle1->GetE());
 
-	double R=1;
-	JetDefinition jet_def(antikt_algorithm, R);
-	//run clustering and get jets
-	ClusterSequence cs(hadronList, jet_def);//run cluster on the hadron list
-	vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets());//jets given by inclusive_jet
+		vTrig.Boost(b);
+		vTrig.RotateZ(-vPh.Phi());
+		vTrig.RotateY(-vPh.Theta());
 
-	if(jets.size()<2) {
-		this->status = false;
-		return;
-	}
+		for(int iasso=itrig+1; iasso<foundNum; iasso++){
+			ParticleMC *particle2 = event->GetTrack(foundIndex[iasso]);
+			vhadron.SetPxPyPzE(particle2->GetPx(), particle2->GetPy(), particle2->GetPz(), particle2->GetE());
+			if(particle1->GetPid()==-particle2->GetPid()){
+//			if(true){ //no antiparticle-particle correlation: for all primary charge
+				vhadron.Boost(b);
+				vhadron.RotateZ(-vPh.Phi());
+				vhadron.RotateY(-vPh.Theta());
 
-	vTrig.SetPxPyPzE(jets[0].px(), jets[0].py(), jets[0].pz(), jets[0].E());
-	vAssc.SetPxPyPzE(jets[1].px(), jets[1].py(), jets[1].pz(), jets[1].E());
-//	double leadPtTrigFrac = findLeadPtFraction(jets[0]);
-//	double leadPtAsscFrac = findLeadPtFraction(jets[1]);
+				h_RapidityCorre->Fill(vTrig.Rapidity(), vhadron.Rapidity());
 
-	if(vTrig.Pt()<4.5||vAssc.Pt()<4){
-		this->status = false;
-		return;
-	}
+				vTotal = vTrig+vhadron;
+				double kt_phi = vTotal.Phi();
+				double delta_phi = vTrig.DeltaPhi(vhadron);
+				double kperp = vTotal.Pt();
+				double Pperp = (vTrig-vhadron).Pt()/2.;
 
-	h_RapidityCorre->Fill(vTrig.Rapidity(), vAssc.Rapidity());
+				//test with Bowen's calculation
+//				if(Pperp<4.) continue;
 
-	vTotal = vTrig+vAssc;
-	double kt_phi = vTotal.Phi();
-	double delta_phi = vTrig.DeltaPhi(vhadron);
-	double kperp = vTotal.Pt();
-	double Pperp = (vTrig-vAssc).Pt()/2.;
+				if(delta_phi < -3.14159/2.) delta_phi+=2*3.14159;
+				if(delta_phi > 3*3.14159/2.) delta_phi-=2*3.14159;
+				if(kt_phi<0) kt_phi+=2*3.14159;
 
-	if(delta_phi < -3.14159/2.) delta_phi+=2*3.14159;
-	if(delta_phi > 3*3.14159/2.) delta_phi-=2*3.14159;
-	if(kt_phi<0) kt_phi+=2*3.14159;
+				h_kperp_Pperp_all->Fill(kperp, Pperp);
+				h_dphi_kpOverPp->Fill(delta_phi, kperp/Pperp);
+				if(event->GetProcess()>132) h_kperp_Pperp_all_PGF->Fill(kperp, Pperp);
+//				std::cout<<"found 1 pair, kperp:"<<kperp<<" Pperp:"<<Pperp<<std::endl;
+				//correlation limit
+//				if(kperp/Pperp<0.4){
+				if(kperp/Pperp<0.7){
+//					std::cout<<"accept 1 pair"<<std::endl;
 
-	h_kperp_Pperp_all->Fill(kperp, Pperp);
-	h_dphi_kpOverPp->Fill(delta_phi, kperp/Pperp);
-	if(event->GetProcess()>132) h_kperp_Pperp_all_PGF->Fill(kperp, Pperp);
+					h_Pair_Eta->Fill(particle1->GetEta());
+					h_Pair_Eta->Fill(particle2->GetEta());
+					h_EtaCorre->Fill(particle1->GetEta(), particle2->GetEta());
 
-	//correlation limit
-//	if(kperp/Pperp<0.7){
-	if(true){
-//		std::cout<<"accept 1 pair"<<std::endl;
+					if(event->GetProcess()>132){
+						h_RapidityCorre_PGF->Fill(vTrig.Rapidity(), vhadron.Rapidity());
+						h_RapidityPair_PGF->Fill(vTrig.Rapidity());
+						h_RapidityPair_PGF->Fill(vhadron.Rapidity());
+					}
+					else if(event->GetProcess()>130){
+						h_RapidityCorre_QCDC->Fill(vTrig.Rapidity(), vhadron.Rapidity());
+						h_RapidityPair_QCDC->Fill(vTrig.Rapidity());
+						h_RapidityPair_QCDC->Fill(vhadron.Rapidity());
+					}
 
-		h_Pair_Eta->Fill(vTrig.Eta());
-		h_Pair_Eta->Fill(vAssc.Eta());
-		h_EtaCorre->Fill(vTrig.Eta(), vAssc.Eta());
+					int parentId1 = event->GetTrack(particle1->GetParent()-1)->GetPid();
+					int parentId2 = event->GetTrack(particle2->GetParent()-1)->GetPid();
+					if(parentId1==91||parentId1==92){
+						ParticleMC *jet = event->GetTrack(event->GetTrack(particle1->GetParent()-1)->GetParent()-1);
+						if(abs(jet->GetPid())<10){
+							//found 1 mother jet
+							h_pt_D0_jet->Fill(jet->GetPt(), particle1->GetPt());
+							h_dphi_D0_jet->Fill(jet->GetPhi() - particle1->GetPhi());
+						}
+					}
+					if(parentId2==91||parentId2==92){
+						ParticleMC *jet = event->GetTrack(event->GetTrack(particle2->GetParent()-1)->GetParent()-1);
+						if(abs(jet->GetPid())<10){
+							h_pt_D0_jet->Fill(jet->GetPt(), particle2->GetPt());
+							h_dphi_D0_jet->Fill(jet->GetPhi() - particle2->GetPhi());
+						}
+					}
 
-		if(event->GetProcess()>132){
-			h_RapidityCorre_PGF->Fill(vTrig.Rapidity(), vhadron.Rapidity());
-			h_RapidityPair_PGF->Fill(vTrig.Rapidity());
-			h_RapidityPair_PGF->Fill(vhadron.Rapidity());
-		}
-		else if(event->GetProcess()>130){
-			h_RapidityCorre_QCDC->Fill(vTrig.Rapidity(), vhadron.Rapidity());
-			h_RapidityPair_QCDC->Fill(vTrig.Rapidity());
-			h_RapidityPair_QCDC->Fill(vhadron.Rapidity());
-		}
+					h_bkgVsPperp->Fill(Pperp, bkg_num);
 
-		h_kperp_Pperp->Fill(kperp, Pperp);
-		h_deltaphi_Pperp->Fill(delta_phi, Pperp);
+					h_kperp_Pperp->Fill(kperp, Pperp);
+					h_deltaphi_Pperp->Fill(delta_phi, Pperp);
 
-		if(event->GetProcess()>130&&event->GetProcess()<133) h_kperp_QCDC->Fill(kperp);
-		if(event->GetProcess()>133) h_kperp_PGF->Fill(kperp);
-		if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_kperp_g_chan->Fill(kperp);
-		if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_kperp_q_chan->Fill(kperp);
+					if(event->GetProcess()>130&&event->GetProcess()<133) h_kperp_QCDC->Fill(kperp);
+					if(event->GetProcess()>133) h_kperp_PGF->Fill(kperp);
+					if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_kperp_g_chan->Fill(kperp);
+					if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_kperp_q_chan->Fill(kperp);
 
-		if(kperp<1&&kperp>0.5){
-			h_phi_pair_1->Fill(kt_phi);
-			if(event->GetProcess()>130&&event->GetProcess()<133) h_phi_pair_QCDC_1->Fill(kt_phi);
-			if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_g_chan_1->Fill(kt_phi);
-			if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_q_chan_1->Fill(kt_phi);
-			h_deltaphi_1->Fill(delta_phi);
-			h_Q2VsxBj_Pair_1->Fill(xBj, Q2);
-			h_deltaphi_Pperp_1->Fill(delta_phi, Pperp);
-		}
-		else if(kperp>1&&kperp<2){
-			if(event->GetProcess()>130&&event->GetProcess()<133) h_phi_pair_QCDC_2->Fill(kt_phi);
-			if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_g_chan_2->Fill(kt_phi);
-			if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_q_chan_2->Fill(kt_phi);
+
+					if(kperp<1&&kperp>0.5){
+						h_phi_pair_1->Fill(kt_phi);
+						if(event->GetProcess()>130&&event->GetProcess()<133) h_phi_pair_QCDC_1->Fill(kt_phi);
+						if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_g_chan_1->Fill(kt_phi);
+						if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_q_chan_1->Fill(kt_phi);
+						h_deltaphi_1->Fill(delta_phi);
+						h_Q2VsxBj_Pair_1->Fill(xBj, Q2);
+						h_deltaphi_Pperp_1->Fill(delta_phi, Pperp);
+					}
+					else if(kperp>1&&kperp<2){
+						if(event->GetProcess()>130&&event->GetProcess()<133) h_phi_pair_QCDC_2->Fill(kt_phi);
+						if(event->GetTargetParton()==21&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_g_chan_2->Fill(kt_phi);
+						if(abs(event->GetTargetParton())<10&&(event->GetProcess()<90||event->GetProcess()>98)) h_phi_pair_q_chan_2->Fill(kt_phi);
 	
-			h_phi_pair_2->Fill(kt_phi);
-			h_deltaphi_2->Fill(delta_phi);
-			h_Q2VsxBj_Pair_2->Fill(xBj, Q2);
-			h_deltaphi_Pperp_2->Fill(delta_phi, Pperp);
-		}
+						h_phi_pair_2->Fill(kt_phi);
+						h_deltaphi_2->Fill(delta_phi);
+						h_Q2VsxBj_Pair_2->Fill(xBj, Q2);
+						h_deltaphi_Pperp_2->Fill(delta_phi, Pperp);
+					}
 
-		if((event->GetProcess()>132||event->GetProcess()==84)){
-			h_kperp_Pperp_PGF->Fill(kperp, Pperp);
-			h_deltaphi_Pperp_PGF->Fill(delta_phi, Pperp);
-			h_Q2VsxBj_Pair_PGF->Fill(xBj, Q2);
-			if(kperp<1&&kperp>0.5){
-				h_phi_pair_PGF_1->Fill(kt_phi);
-				h_deltaphi_PGF_1->Fill(delta_phi);
-				h_deltaphi_Pperp_PGF_1->Fill(delta_phi, Pperp);
-			}
-			else if(kperp>1&&kperp<2){
-				h_phi_pair_PGF_2->Fill(kt_phi);
-				h_deltaphi_PGF_2->Fill(delta_phi);
-				h_deltaphi_Pperp_PGF_2->Fill(delta_phi, Pperp);
-			}
-		}
-		else
-			h_bkg_process->Fill(event->GetProcess());
+			//		if((event->GetProcess()>132||event->GetProcess()==84) && abs(event->GetOutParton1())==selectQuark){
+					if((event->GetProcess()>132||event->GetProcess()==84)){
+						h_kperp_Pperp_PGF->Fill(kperp, Pperp);
+						h_deltaphi_Pperp_PGF->Fill(delta_phi, Pperp);
+						h_Q2VsxBj_Pair_PGF->Fill(xBj, Q2);
+						if(kperp<1&&kperp>0.5){
+							h_phi_pair_PGF_1->Fill(kt_phi);
+							h_deltaphi_PGF_1->Fill(delta_phi);
+							h_deltaphi_Pperp_PGF_1->Fill(delta_phi, Pperp);
+						}
+						else if(kperp>1&&kperp<2){
+							h_phi_pair_PGF_2->Fill(kt_phi);
+							h_deltaphi_PGF_2->Fill(delta_phi);
+							h_deltaphi_Pperp_PGF_2->Fill(delta_phi, Pperp);
+						}
+					}
+					else
+						h_bkg_process->Fill(event->GetProcess());
 
-		h_Q2VsxBj_Pair->Fill(xBj, Q2);
-		h_Q2VsxBj_Pair_xg->Fill(xBj, Q2, event->GetTargetPartonX());
-		h_xg_Pair->Fill(event->GetTargetPartonX());
-		this->status = true;//this event found one pair
-	}//kperp/Pperp cut
+					h_Q2VsxBj_Pair->Fill(xBj, Q2);
+					h_Q2VsxBj_Pair_xg->Fill(xBj, Q2, event->GetTargetPartonX());
+					h_xg_Pair->Fill(event->GetTargetPartonX());
+					this->status = true;//this event found one pair
+				}//kperp/Pperp cut
+			}//if assoc id== trig id
+		}//for asso loop
+	}//for trig loop
+	
+//	std::cout<<num_Kaon<<std::endl;
 
 }
 
@@ -584,32 +695,34 @@ void Analysis::WriteResults(TFile *file){
 	h_Kaon_eta->Write();
 	h_Kaon_pt->Write();
 	h_Kaon_z->Write();
-	h_Pion_eta->Write();
-	h_Pion_pt->Write();
-	h_Pion_z->Write();
+	h_charge_eta->Write();
+	h_charge_pt->Write();
+	h_charge_z->Write();
 
 	h_Kaon_eta_LODIS->Write();
 	h_Kaon_pt_LODIS->Write();
 	h_Kaon_z_LODIS->Write();
-	h_Pion_eta_LODIS->Write();
-	h_Pion_pt_LODIS->Write();
-	h_Pion_z_LODIS->Write();
+	h_charge_eta_LODIS->Write();
+	h_charge_pt_LODIS->Write();
+	h_charge_z_LODIS->Write();
 
 	h_Kaon_eta_Direct->Write();
 	h_Kaon_pt_Direct->Write();
 	h_Kaon_pt_PGF->Write();
 	h_Kaon_pt_QCDC->Write();
 	h_Kaon_z_Direct->Write();
-	h_Pion_eta_Direct->Write();
-	h_Pion_pt_Direct->Write();
-	h_Pion_z_Direct->Write();
-
+	h_charge_eta_Direct->Write();
+	h_charge_pt_Direct->Write();
+	h_charge_z_Direct->Write();
+	h_charge_pt_PGF->Write();
+	h_charge_pt_QCDC->Write();
+	
 	h_Kaon_eta_Resolved->Write();
 	h_Kaon_pt_Resolved->Write();
 	h_Kaon_z_Resolved->Write();
-	h_Pion_eta_Resolved->Write();
-	h_Pion_pt_Resolved->Write();
-	h_Pion_z_Resolved->Write();
+	h_charge_eta_Resolved->Write();
+	h_charge_pt_Resolved->Write();
+	h_charge_z_Resolved->Write();
 
 	h_Kaon_eta_PGFss->Write();
 	h_Kaon_pt_PGFss->Write();
@@ -627,6 +740,7 @@ void Analysis::WriteResults(TFile *file){
 
 	h_D0_decay_pi->Write();
 	h_D0_decay_kaon->Write();
+	h_D0_pipt_kaonpt->Write();
 
 	//pair wise
 	h_Pair_Eta->Write();
@@ -669,10 +783,12 @@ void Analysis::WriteResults(TFile *file){
 	h_bkg_process->Write();
 
 	//event wise
+	h_oute_pVsEta->Write();
 	h_QSquared->Write();
-//	h_xBj->Write();
-//	h_W2->Write();
-//	h_y->Write();
+	h_xBj->Write();
+	h_W2->Write();
+	h_W->Write();
+	h_y->Write();
 	h_Q2VsxBj->Write();
 	h_Q2VsxBj_Pair->Write();
 	h_Q2VsxBj_Pair_PGF->Write();
